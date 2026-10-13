@@ -1,0 +1,11 @@
+{
+  "name": "jejak-api-workspace",
+  "version": "0.1.0",
+  "private": true,
+  "description": "JEJAK API: WebGIS Peringatan Dini Kebakaran Gambut H-30 Berbasis Jejak Aktivitas Manusia Menggunakan LightGBM dan Explainable AI (TreeSHAP) dengan Verifikasi Lapangan Melalui Drone Langsung",
+  "scripts": {
+    "dev": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build",
+    "start": "./start.sh"
+  }
+}
