@@ -1,0 +1,39 @@
+[project]
+name = "jejak-pipeline"
+version = "0.1.0"
+description = "JEJAK API offline data & ML pipeline (Fase 1-2)"
+authors = [{name = "Rivaldi Gunawan Yusuf", email = "rivaldigunawanyusuf@gmail.com"}]
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "numpy>=1.26",
+    "pandas>=2.2",
+    "pyarrow>=15",
+    "geopandas>=0.14",
+    "shapely>=2.0",
+    "pyproj>=3.6",
+    "pydantic>=2.6",
+    "rasterio>=1.4.4",
+    "earthengine-api>=1.7.48",
+    "duckdb>=1.5.6",
+    "lightgbm>=4.7.0",
+    "shap>=0.51.0",
+    "scikit-learn>=1.9.1",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "black>=24",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"
+
+[tool.black]
+line-length = 88
+target-version = ["py311"]
