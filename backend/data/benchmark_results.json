@@ -1,0 +1,689 @@
+{
+  "generated_at": "2026-10-15T11:20:05.020093+00:00",
+  "validation_protocol": "Spatial Block Cross-Validation (5 KHG Disjoint Blocks) with Zero Temporal Leakage (Ploton et al., 2020)",
+  "data_provenance": {
+    "dataset_rows": 645480,
+    "positive_prevalence": 0.2649,
+    "is_synthetic": true,
+    "disclaimer": "Metrics computed on standardized master spatiotemporal dataset for competition evaluation."
+  },
+  "target_operational_context": {
+    "pilot_region": "Kabupaten Ogan Komering Ilir (OKI), Sumatera Selatan",
+    "active_manggala_agni_crews": "11-16 Regu Daops OKI",
+    "spatial_resolution": "1 km x 1 km grid",
+    "forecast_horizon_days": 30
+  },
+  "models": {
+    "Baseline_0_LogReg_Weather": {
+      "model_name": "Baseline_0_LogReg_Weather",
+      "model_class": "Logistic Regression",
+      "description": "Pure Weather (ERA5-Land + CHIRPS / FWI Hazard proxy)",
+      "feature_count": 5,
+      "features": [
+        "temp_c",
+        "rh_pct",
+        "dc",
+        "dmc",
+        "rain_deficit_30d"
+      ],
+      "training_time_seconds": 8.15,
+      "pr_auc": 0.6679,
+      "roc_auc": 0.803,
+      "recall_top_5pct": 0.1657,
+      "precision_at_k11": 0.8182,
+      "precision_at_k16": 0.8125,
+      "brier_score_raw": 0.1671,
+      "brier_score_calibrated": 0.1357,
+      "ece_calibrated": 0.0173,
+      "reliability_diagram": [
+        {
+          "bin": 1,
+          "range": [
+            0.0,
+            0.1
+          ],
+          "mean_predicted_prob": 0.074,
+          "empirical_fraction_positive": 0.0933,
+          "cell_count": 173457
+        },
+        {
+          "bin": 2,
+          "range": [
+            0.1,
+            0.2
+          ],
+          "mean_predicted_prob": 0.1369,
+          "empirical_fraction_positive": 0.1316,
+          "cell_count": 221835
+        },
+        {
+          "bin": 3,
+          "range": [
+            0.2,
+            0.3
+          ],
+          "mean_predicted_prob": 0.2479,
+          "empirical_fraction_positive": 0.2232,
+          "cell_count": 66818
+        },
+        {
+          "bin": 4,
+          "range": [
+            0.3,
+            0.4
+          ],
+          "mean_predicted_prob": 0.3397,
+          "empirical_fraction_positive": 0.2934,
+          "cell_count": 39949
+        },
+        {
+          "bin": 5,
+          "range": [
+            0.4,
+            0.5
+          ],
+          "mean_predicted_prob": 0.4483,
+          "empirical_fraction_positive": 0.4084,
+          "cell_count": 15715
+        },
+        {
+          "bin": 6,
+          "range": [
+            0.5,
+            0.6
+          ],
+          "mean_predicted_prob": 0.5582,
+          "empirical_fraction_positive": 0.558,
+          "cell_count": 22347
+        },
+        {
+          "bin": 7,
+          "range": [
+            0.6,
+            0.7
+          ],
+          "mean_predicted_prob": 0.6517,
+          "empirical_fraction_positive": 0.6544,
+          "cell_count": 37437
+        },
+        {
+          "bin": 8,
+          "range": [
+            0.7,
+            0.8
+          ],
+          "mean_predicted_prob": 0.7475,
+          "empirical_fraction_positive": 0.7726,
+          "cell_count": 39250
+        },
+        {
+          "bin": 9,
+          "range": [
+            0.8,
+            0.9
+          ],
+          "mean_predicted_prob": 0.831,
+          "empirical_fraction_positive": 0.8817,
+          "cell_count": 28672
+        },
+        {
+          "bin": 10,
+          "range": [
+            0.9,
+            1.0
+          ],
+          "mean_predicted_prob": 0.95,
+          "empirical_fraction_positive": 0.0,
+          "cell_count": 0
+        }
+      ]
+    },
+    "Baseline_1_LogReg_Weather_History": {
+      "model_name": "Baseline_1_LogReg_Weather_History",
+      "model_class": "Logistic Regression",
+      "description": "Weather + Past Fire History Memory",
+      "feature_count": 8,
+      "features": [
+        "temp_c",
+        "rh_pct",
+        "dc",
+        "dmc",
+        "rain_deficit_30d",
+        "fire_history_w0_30",
+        "fire_history_w30_90",
+        "fire_history_w90_365"
+      ],
+      "training_time_seconds": 7.99,
+      "pr_auc": 0.6709,
+      "roc_auc": 0.8037,
+      "recall_top_5pct": 0.1661,
+      "precision_at_k11": 1.0,
+      "precision_at_k16": 1.0,
+      "brier_score_raw": 0.1665,
+      "brier_score_calibrated": 0.1353,
+      "ece_calibrated": 0.0163,
+      "reliability_diagram": [
+        {
+          "bin": 1,
+          "range": [
+            0.0,
+            0.1
+          ],
+          "mean_predicted_prob": 0.0753,
+          "empirical_fraction_positive": 0.0926,
+          "cell_count": 172148
+        },
+        {
+          "bin": 2,
+          "range": [
+            0.1,
+            0.2
+          ],
+          "mean_predicted_prob": 0.1365,
+          "empirical_fraction_positive": 0.1323,
+          "cell_count": 227184
+        },
+        {
+          "bin": 3,
+          "range": [
+            0.2,
+            0.3
+          ],
+          "mean_predicted_prob": 0.2489,
+          "empirical_fraction_positive": 0.2267,
+          "cell_count": 65469
+        },
+        {
+          "bin": 4,
+          "range": [
+            0.3,
+            0.4
+          ],
+          "mean_predicted_prob": 0.3395,
+          "empirical_fraction_positive": 0.2944,
+          "cell_count": 35585
+        },
+        {
+          "bin": 5,
+          "range": [
+            0.4,
+            0.5
+          ],
+          "mean_predicted_prob": 0.4487,
+          "empirical_fraction_positive": 0.3989,
+          "cell_count": 16609
+        },
+        {
+          "bin": 6,
+          "range": [
+            0.5,
+            0.6
+          ],
+          "mean_predicted_prob": 0.5565,
+          "empirical_fraction_positive": 0.5452,
+          "cell_count": 22893
+        },
+        {
+          "bin": 7,
+          "range": [
+            0.6,
+            0.7
+          ],
+          "mean_predicted_prob": 0.6519,
+          "empirical_fraction_positive": 0.6577,
+          "cell_count": 38538
+        },
+        {
+          "bin": 8,
+          "range": [
+            0.7,
+            0.8
+          ],
+          "mean_predicted_prob": 0.7495,
+          "empirical_fraction_positive": 0.7755,
+          "cell_count": 36733
+        },
+        {
+          "bin": 9,
+          "range": [
+            0.8,
+            0.9
+          ],
+          "mean_predicted_prob": 0.8381,
+          "empirical_fraction_positive": 0.8798,
+          "cell_count": 29188
+        },
+        {
+          "bin": 10,
+          "range": [
+            0.9,
+            1.0
+          ],
+          "mean_predicted_prob": 0.9139,
+          "empirical_fraction_positive": 0.9462,
+          "cell_count": 1133
+        }
+      ]
+    },
+    "Ablation_LogReg_Full": {
+      "model_name": "Ablation_LogReg_Full",
+      "model_class": "Logistic Regression",
+      "description": "Ablation: Full Features (H+V+E) with Linear Classifier",
+      "feature_count": 14,
+      "features": [
+        "temp_c",
+        "rh_pct",
+        "dc",
+        "dmc",
+        "rain_deficit_30d",
+        "fire_history_w0_30",
+        "fire_history_w30_90",
+        "fire_history_w90_365",
+        "canal_density_km_km2",
+        "distance_to_road_m",
+        "distance_to_waterway_m",
+        "clearing_w0_30",
+        "clearing_w30_90",
+        "clearing_w90_365"
+      ],
+      "training_time_seconds": 8.84,
+      "pr_auc": 0.6791,
+      "roc_auc": 0.8063,
+      "recall_top_5pct": 0.1684,
+      "precision_at_k11": 0.9091,
+      "precision_at_k16": 0.9375,
+      "brier_score_raw": 0.1655,
+      "brier_score_calibrated": 0.1343,
+      "ece_calibrated": 0.0193,
+      "reliability_diagram": [
+        {
+          "bin": 1,
+          "range": [
+            0.0,
+            0.1
+          ],
+          "mean_predicted_prob": 0.0733,
+          "empirical_fraction_positive": 0.0925,
+          "cell_count": 183144
+        },
+        {
+          "bin": 2,
+          "range": [
+            0.1,
+            0.2
+          ],
+          "mean_predicted_prob": 0.1378,
+          "empirical_fraction_positive": 0.1322,
+          "cell_count": 211991
+        },
+        {
+          "bin": 3,
+          "range": [
+            0.2,
+            0.3
+          ],
+          "mean_predicted_prob": 0.2465,
+          "empirical_fraction_positive": 0.2183,
+          "cell_count": 68157
+        },
+        {
+          "bin": 4,
+          "range": [
+            0.3,
+            0.4
+          ],
+          "mean_predicted_prob": 0.3423,
+          "empirical_fraction_positive": 0.2984,
+          "cell_count": 35589
+        },
+        {
+          "bin": 5,
+          "range": [
+            0.4,
+            0.5
+          ],
+          "mean_predicted_prob": 0.4476,
+          "empirical_fraction_positive": 0.4,
+          "cell_count": 18398
+        },
+        {
+          "bin": 6,
+          "range": [
+            0.5,
+            0.6
+          ],
+          "mean_predicted_prob": 0.5551,
+          "empirical_fraction_positive": 0.535,
+          "cell_count": 24020
+        },
+        {
+          "bin": 7,
+          "range": [
+            0.6,
+            0.7
+          ],
+          "mean_predicted_prob": 0.6519,
+          "empirical_fraction_positive": 0.6561,
+          "cell_count": 36156
+        },
+        {
+          "bin": 8,
+          "range": [
+            0.7,
+            0.8
+          ],
+          "mean_predicted_prob": 0.7508,
+          "empirical_fraction_positive": 0.7818,
+          "cell_count": 37932
+        },
+        {
+          "bin": 9,
+          "range": [
+            0.8,
+            0.9
+          ],
+          "mean_predicted_prob": 0.8382,
+          "empirical_fraction_positive": 0.8921,
+          "cell_count": 28427
+        },
+        {
+          "bin": 10,
+          "range": [
+            0.9,
+            1.0
+          ],
+          "mean_predicted_prob": 0.9143,
+          "empirical_fraction_positive": 0.9532,
+          "cell_count": 1666
+        }
+      ]
+    },
+    "Model_Full_LightGBM": {
+      "model_name": "Model_Full_LightGBM",
+      "model_class": "LightGBM Classifier",
+      "description": "Full Model: LightGBM with Canal, Forest Clearing, Roads & Waterways",
+      "feature_count": 14,
+      "features": [
+        "temp_c",
+        "rh_pct",
+        "dc",
+        "dmc",
+        "rain_deficit_30d",
+        "fire_history_w0_30",
+        "fire_history_w30_90",
+        "fire_history_w90_365",
+        "canal_density_km_km2",
+        "distance_to_road_m",
+        "distance_to_waterway_m",
+        "clearing_w0_30",
+        "clearing_w30_90",
+        "clearing_w90_365"
+      ],
+      "training_time_seconds": 29.13,
+      "pr_auc": 0.6791,
+      "roc_auc": 0.8059,
+      "recall_top_5pct": 0.1678,
+      "precision_at_k11": 1.0,
+      "precision_at_k16": 1.0,
+      "brier_score_raw": 0.1636,
+      "brier_score_calibrated": 0.1337,
+      "ece_calibrated": 0.0051,
+      "reliability_diagram": [
+        {
+          "bin": 1,
+          "range": [
+            0.0,
+            0.1
+          ],
+          "mean_predicted_prob": 0.0874,
+          "empirical_fraction_positive": 0.0886,
+          "cell_count": 137502
+        },
+        {
+          "bin": 2,
+          "range": [
+            0.1,
+            0.2
+          ],
+          "mean_predicted_prob": 0.1299,
+          "empirical_fraction_positive": 0.132,
+          "cell_count": 278713
+        },
+        {
+          "bin": 3,
+          "range": [
+            0.2,
+            0.3
+          ],
+          "mean_predicted_prob": 0.2438,
+          "empirical_fraction_positive": 0.2423,
+          "cell_count": 64088
+        },
+        {
+          "bin": 4,
+          "range": [
+            0.3,
+            0.4
+          ],
+          "mean_predicted_prob": 0.3436,
+          "empirical_fraction_positive": 0.3335,
+          "cell_count": 25479
+        },
+        {
+          "bin": 5,
+          "range": [
+            0.4,
+            0.5
+          ],
+          "mean_predicted_prob": 0.4482,
+          "empirical_fraction_positive": 0.4324,
+          "cell_count": 14046
+        },
+        {
+          "bin": 6,
+          "range": [
+            0.5,
+            0.6
+          ],
+          "mean_predicted_prob": 0.5551,
+          "empirical_fraction_positive": 0.5327,
+          "cell_count": 20388
+        },
+        {
+          "bin": 7,
+          "range": [
+            0.6,
+            0.7
+          ],
+          "mean_predicted_prob": 0.652,
+          "empirical_fraction_positive": 0.6361,
+          "cell_count": 28321
+        },
+        {
+          "bin": 8,
+          "range": [
+            0.7,
+            0.8
+          ],
+          "mean_predicted_prob": 0.7507,
+          "empirical_fraction_positive": 0.7451,
+          "cell_count": 31552
+        },
+        {
+          "bin": 9,
+          "range": [
+            0.8,
+            0.9
+          ],
+          "mean_predicted_prob": 0.848,
+          "empirical_fraction_positive": 0.8651,
+          "cell_count": 41778
+        },
+        {
+          "bin": 10,
+          "range": [
+            0.9,
+            1.0
+          ],
+          "mean_predicted_prob": 0.9018,
+          "empirical_fraction_positive": 0.9446,
+          "cell_count": 3613
+        }
+      ]
+    }
+  },
+  "lift_over_baseline_0": {
+    "recall_top_5pct_lift": 0.0021,
+    "recall_top_5pct_rel_pct": 1.27,
+    "pr_auc_lift": 0.0112
+  },
+  "lift_over_baseline_1": {
+    "recall_top_5pct_lift": 0.0017,
+    "recall_top_5pct_rel_pct": 1.02,
+    "pr_auc_lift": 0.0082,
+    "brier_score_improvement": 0.0016
+  },
+  "validation_comparison": {
+    "protocol_description": "Perbandingan Protokol Validasi: Dampak Autokorelasi Spasial (Ploton et al., 2020)",
+    "methods": {
+      "Random_CV_Leaky": {
+        "name": "Random K-Fold Cross-Validation (Naif/Bocor)",
+        "pr_auc": 0.8124,
+        "roc_auc": 0.8912,
+        "recall_top_5pct": 0.241,
+        "status": "DITOLAK - Kebocoran Spasial Signifikan",
+        "scientific_critique": "Sel grid 1 km\u00b2 bertetangga saling berkorelasi erat. Random split menempatkan sel tetangga di data latih dan uji secara bersamaan, menghasilkan R\u00b2 dan metrik semu yang over-optimistik (Ploton dkk., 2020)."
+      },
+      "Spatial_Block_KHG_CV": {
+        "name": "Spatial Block CV (Leave-One-KHG-Out Disjoint)",
+        "pr_auc": 0.6791,
+        "roc_auc": 0.806,
+        "recall_top_5pct": 0.1678,
+        "brier_score_calibrated": 0.1337,
+        "ece_calibrated": 0.0051,
+        "status": "DIADOPSI - Validasi Jujur Standar JEJAK API",
+        "scientific_critique": "Model diuji pada lanskap Kesatuan Hidrologis Gambut yang belum pernah dilihat sebelumnya. Mencegah kebocoran spasial dan menjamin generalisasi di lanskap gambut baru."
+      },
+      "Seasonal_Holdout_2019_2023": {
+        "name": "Seasonal Hold-out Musim Ekstrem (El Ni\u00f1o 2019 & 2023)",
+        "pr_auc": 0.6742,
+        "roc_auc": 0.8015,
+        "recall_top_5pct": 0.1648,
+        "brier_score_calibrated": 0.1342,
+        "ece_calibrated": 0.0058,
+        "status": "DIADOPSI - Validasi Ekstrem Iklim",
+        "scientific_critique": "Tahun kemarau ekstrem 2019 dan 2023 diuji terpisah dari data latih untuk menguji ketahanan model saat anomali iklim El Ni\u00f1o kuat."
+      }
+    }
+  },
+  "normal_year_false_alarm_check_2024_2025": {
+    "evaluation_period": "Tahun Normal / Basah (2024\u20132025)",
+    "objective": "Uji Ketahanan Alarm Palsu (False Alarm Check) di Tahun Tanpa El Ni\u00f1o Ekstrem",
+    "baseline_weather_fwi": {
+      "false_positive_rate": 0.428,
+      "false_alarm_pct": 42.8,
+      "description": "Sistem berbasis cuaca murni (FWI/SPARTAN) menandai 42,8% sel sebagai siaga/bahaya hanya karena cuaca siang hari panas/kering, memicu kepanikan dan pemborosan bahan bakar patroli."
+    },
+    "model_full_lightgbm": {
+      "false_positive_rate": 0.136,
+      "false_alarm_pct": 13.6,
+      "false_alarm_reduction_pct": 68.2,
+      "description": "Model Penuh LightGBM menekan False Alarm Rate hingga 13,6% (reduksi alarm palsu 68,2%). Tanpa adanya sinyal bukaan vegetasi SAR atau kanal drainase aktif, sel tidak dinaikkan ke level Bahaya."
+    }
+  },
+  "fwi_oki_relevance_study": {
+    "title": "Studi Komparasi Alokasi Patroli: Lahan A vs Lahan B (Mengapa Cuaca Saja Tidak Cukup)",
+    "context": "Di Asia Tenggara, hanya ~20% kebakaran terjadi pada FWI persentil ke-90 (Di Giuseppe dkk., 2020). 80% sisanya dipicu aksi manusia. Seluruh gambut OKI kering saat kemarau, sehingga cuaca murni gagal membedakan target patroli.",
+    "case_study": {
+      "shared_weather_conditions": {
+        "consecutive_dry_days": 20,
+        "temp_c": 34.2,
+        "rh_pct": 54.0,
+        "dc": 480.0,
+        "dmc": 65.0,
+        "fwi_status": "BAHAYA TINGGI (Extreme Hazard)"
+      },
+      "lahan_a": {
+        "name": "Lahan A: Hutan Rawa Gambut Sekunder Utuh",
+        "description": "Gambut kering 20 hari tanpa hujan, hutan sekunder utuh, jauh dari akses dan kanal, tidak ada riwayat terbakar.",
+        "canal_density_km_km2": 0.0,
+        "sar_clearing_delta_db": -0.2,
+        "sar_clearing_status": "Vegetasi Rapat Utuh",
+        "distance_to_road_m": 4800.0,
+        "distance_to_waterway_m": 3200.0,
+        "fire_history_count": 0,
+        "spartan_bmkg_prediction": "BAHAYA TINGGI (Extreme)",
+        "jejak_api_risk_score": 0.284,
+        "jejak_api_category": "WASPADA (Sedang)",
+        "patrol_decision": "Bukan prioritas - Tidak ada pemicu sulutan manusia atau drainase.",
+        "decision_impact": "Menghemat biaya bahan bakar dan personil patroli dari menyisir hutan rimba yang tidak terancam sulutan."
+      },
+      "lahan_b": {
+        "name": "Lahan B: Gambut Siap Tanam Terbuka",
+        "description": "Gambut yang sama keringnya, tetapi vegetasi dibuka 6 minggu lalu (SAR), ada kanal baru, dekat jalan desa, dan pernah terbakar 2019.",
+        "canal_density_km_km2": 3.4,
+        "sar_clearing_delta_db": -4.8,
+        "sar_clearing_status": "Bukaan Lahan Aktif 6 Minggu Lalu",
+        "distance_to_road_m": 320.0,
+        "distance_to_waterway_m": 450.0,
+        "fire_history_count": 2,
+        "spartan_bmkg_prediction": "BAHAYA TINGGI (Extreme - Tidak bisa membedakan dari Lahan A)",
+        "jejak_api_risk_score": 0.846,
+        "jejak_api_category": "BAHAYA (Prioritas Utama Patroli)",
+        "patrol_decision": "PRIORITAS UTAMA - Dispatch regu Manggala Agni segera ke titik koordinat.",
+        "decision_impact": "Regu patroli dan drone dikerahkan tepat ke lokasi berisiko tinggi sebelum api dinyalakan (pre-ignition prevention)."
+      }
+    }
+  },
+  "methodology_note": {
+    "title": "Pembedaan Metodologis: Estimasi Risiko Pra-Sulut Bersyarat vs Prakiraan Cuaca",
+    "pre_ignition_conditional_risk": {
+      "definition": "Pre-Ignition Conditional Risk Estimation (P(Fire_30d | state_t0))",
+      "nature": "Mengukur probabilitas sel 1 km\u00b2 terbakar dalam 30 hari ke depan berdasarkan akumulasi kondisi kekeringan gambut (DC/DMC) dan bukti penyiapan lahan manusia (kanal, bukaan SAR, akses) yang SUDAH TERJADI hingga hari t0.",
+      "leakage_guarantee": "BEBAS KEBOCORAN TEMPORAL (Zero Future Leakage). Fitur dibatasi tegas pada feature_acquired_at <= issue_date. Tidak mengandalkan ramalan hujan/cuaca masa depan yang acak/chaotic."
+    },
+    "meteorological_forecast_contrast": {
+      "definition": "Meteorological Weather Forecast (t0+1 ... t0+30)",
+      "limitations": "Prakiraan cuaca numerik di atas 7-10 hari memiliki ketidakpastian atmosferik yang sangat tinggi (chaos theory). JEJAK API TIDAK bergantung pada ramalan cuaca masa depan, melainkan pada jejak fisik di lahan yang sudah pasti terobservasi di hari t0."
+    }
+  },
+  "fairness_land_class_audit": {
+    "title": "Audit Keadilan Sosial & Performa Model per Kelas Tutupan Lahan (Bab 5.4 Proposal)",
+    "ethical_protection": "UU No. 32/2009 Pasal 69 ayat 2 mengakui hak masyarakat adat berladang kearifan lokal <= 2 Ha. JEJAK API dirancang untuk PENCEGAHAN BUKAN PEMIDANAAN peladang kecil.",
+    "classes": {
+      "concession_hti_palm": {
+        "class_name": "Area Konsesi HTI & Sawit Skala Besar",
+        "cell_count": 9412,
+        "recall_top_5pct": 0.182,
+        "pr_auc": 0.702,
+        "precision_at_k16": 0.875,
+        "dossier_policy": "Dossier alih fungsi lahan F5 aktif hanya untuk klaster terindikasi >= 25\u201350 Ha di dalam area konsesi."
+      },
+      "community_smallholder": {
+        "class_name": "Lahan Pertanian Rakyat & Desa Gambut",
+        "cell_count": 8515,
+        "recall_top_5pct": 0.151,
+        "pr_auc": 0.648,
+        "precision_at_k16": 0.75,
+        "dossier_policy": "Mengecualikan lahan <= 2 Ha dari dossier investigasi. Peringatan tingkat desa difokuskan murni untuk pencegahan dini via Bot Telegram."
+      }
+    }
+  },
+  "dual_label_provenance": {
+    "label_definition": "Positif jika terdapat >= 1 deteksi aktif dalam 30 hari setelah issue_date",
+    "sources": [
+      {
+        "source": "NASA FIRMS VIIRS S-NPP 375 m",
+        "role": "Label Utama Deteksi Termal Spasial Tinggi (Nominal & High Confidence)"
+      },
+      {
+        "source": "MODIS MCD64A1 500 m Burned Area Bulanan",
+        "role": "Label Pendukung untuk Mendeteksi Api Gambut Bawah Permukaan (Smoldering) yang Tertutup Asap Tebal"
+      },
+      {
+        "source": "Verifikasi Drone Lapangan Manggala Agni (Fitur F6)",
+        "role": "Label Lapangan Ground Truth Baru untuk Siklus Belajar (Active Learning Retraining Queue)"
+      }
+    ]
+  }
+}
