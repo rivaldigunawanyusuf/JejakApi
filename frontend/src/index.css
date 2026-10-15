@@ -1,0 +1,198 @@
+/* src/index.css */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+/* Note: Google Sans/Product Sans is a proprietary font, using fallbacks */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Google Dark Theme Colors */
+  --color-primary: 138, 180, 248;    /* #8ab4f8 - Google blue */
+  --color-secondary: 129, 201, 149;  /* #81c995 - Google green */
+  --color-background: 24, 24, 24;    /* #181818 - Google dark background - updated */
+  --color-surface: 48, 49, 52;       /* #303134 - Google dark surface */
+  --color-text: 232, 234, 237;       /* #e8eaed - Google light text */
+  --color-text-light: 154, 160, 166; /* #9aa0a6 - Google secondary text */
+  --color-accent: 253, 214, 99;      /* #fdd663 - Google yellow */
+  --color-error: 242, 139, 130;      /* #f28b82 - Google red */
+  
+  /* Component styling */
+  --shadow-card: 0 2px 6px 2px rgba(0, 0, 0, 0.15);
+  --shadow-card-hover: 0 4px 8px 3px rgba(0, 0, 0, 0.2);
+  --transition-default: all 0.2s ease;
+  --transition-fast: all 0.1s ease;
+  --transition-slow: all 0.3s ease;
+  --radius-default: 0.5rem;
+  --radius-large: 1rem;
+  --radius-pill: 9999px;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', Arial, sans-serif;
+  background-color: #181818;
+  color: rgb(var(--color-text));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Google-style scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(var(--color-surface));
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(154, 160, 166, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(154, 160, 166, 0.7);
+}
+
+/* Google-style focus */
+:focus {
+  outline: 2px solid rgba(var(--color-primary), 0.5);
+  outline-offset: 2px;
+}
+
+/* Animation classes */
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.slide-up {
+  animation: slideUp 0.4s ease-out;
+}
+
+.slide-down {
+  animation: slideDown 0.4s ease-out;
+}
+
+.scale-in {
+  animation: scaleIn 0.3s ease-out;
+}
+
+/* Google-style components */
+@layer components {
+  /* Buttons */
+  .btn {
+    @apply px-4 py-2 rounded-full text-sm font-medium transition-all focus:outline-none focus:ring-2 focus:ring-offset-2;
+  }
+  
+  .btn-primary {
+    @apply bg-google-blue text-black hover:bg-google-blue-light focus:ring-google-blue;
+  }
+  
+  .btn-secondary {
+    @apply bg-google-green text-black hover:bg-google-green-light focus:ring-google-green;
+  }
+  
+  .btn-outline {
+    @apply border border-google-grey-300 text-google-grey-100 hover:bg-google-bg-lighter focus:ring-google-blue;
+  }
+  
+  /* Cards */
+  .card {
+    @apply bg-google-bg-light rounded-lg shadow-card hover:shadow-card-hover transition-all p-4;
+  }
+  
+  /* Form inputs */
+  .input {
+    @apply w-full px-3 py-2 bg-google-bg-light border border-google-bg-lighter rounded-md text-google-grey-100
+    focus:outline-none focus:ring-2 focus:ring-google-blue focus:border-transparent;
+  }
+  
+  /* Dropdowns */
+  .dropdown {
+    @apply bg-google-bg-light rounded-md shadow-md p-1 border border-google-bg-lighter;
+  }
+  
+  .dropdown-item {
+    @apply px-3 py-2 rounded hover:bg-google-bg-lighter cursor-pointer flex items-center gap-2 text-google-grey-100;
+  }
+  
+  /* Badge */
+  .badge {
+    @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium;
+  }
+  
+  .badge-primary {
+    @apply bg-google-blue-dark/20 text-google-blue;
+  }
+  
+  .badge-secondary {
+    @apply bg-google-green-dark/20 text-google-green;
+  }
+  
+  /* Tooltip */
+  .tooltip {
+    @apply absolute bg-google-bg-lighter text-google-grey-100 px-2 py-1 rounded text-sm z-50 whitespace-nowrap;
+  }
+}
+
+/* Map control styling */
+.maplibregl-popup {
+  max-width: 300px !important;
+}
+
+.maplibregl-popup-content {
+  padding: 12px !important;
+  border-radius: var(--radius-default) !important;
+  box-shadow: var(--shadow-card) !important;
+  font-family: 'Roboto', sans-serif !important;
+  background-color: rgb(var(--color-surface)) !important;
+  color: rgb(var(--color-text)) !important;
+}
+
+.maplibregl-ctrl-group {
+  overflow: hidden;
+  border-radius: var(--radius-default) !important;
+  box-shadow: var(--shadow-card) !important;
+  background-color: #181818 !important; /* Updated to #181818 */
+}
+
+.maplibregl-ctrl-group button {
+  width: 36px !important;
+  height: 36px !important;
+  background-color: #181818 !important; /* Updated to #181818 */
+  color: rgb(var(--color-text)) !important;
+}
+
+.maplibregl-ctrl-group button:hover {
+  background-color: #303134 !important;
+}
+
+/* Layout */
+.main-content {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Cross-browser scrollbar hiding utility */
+.scrollbar-none {
+  -ms-overflow-style: none !important; /* IE and Edge */
+  scrollbar-width: none !important; /* Firefox */
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none !important; /* Chrome, Safari, Opera */
+  width: 0 !important;
+  height: 0 !important;
+}
