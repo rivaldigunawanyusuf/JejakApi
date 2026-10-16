@@ -52,8 +52,12 @@ const RightInspector = ({
   onFlyTo,
   stats,
   onOpenPocInfo,
+  isExpanded: externalIsExpanded,
+  setIsExpanded: externalSetIsExpanded,
 }) => {
-  const [isExpanded, setIsExpanded] = useState(() => typeof window !== 'undefined' && window.innerWidth >= 768);
+  const [internalIsExpanded, setInternalIsExpanded] = useState(() => typeof window !== 'undefined' && window.innerWidth >= 768);
+  const isExpanded = externalIsExpanded !== undefined ? externalIsExpanded : internalIsExpanded;
+  const setIsExpanded = externalSetIsExpanded || setInternalIsExpanded;
   const [activeTab, setActiveTab] = useState('inspect'); // 'layers' | 'inspect' | 'info'
   const [cellData, setCellData] = useState(null);
   const [weatherData, setWeatherData] = useState(null);
@@ -888,9 +892,9 @@ const RightInspector = ({
 
       {/* 2. Mobile Bottom Sheet Drawer (When Expanded on Mobile) */}
       {isExpanded && (
-        <div className="md:hidden fixed inset-0 z-40 bg-black/60 backdrop-blur-xs flex flex-col justify-end animate-in fade-in duration-150">
+        <div className="md:hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex flex-col justify-end animate-in fade-in duration-150">
           <div className="fixed inset-0" onClick={() => setIsExpanded(false)} />
-          <div className="relative w-full max-h-[82vh] h-[78vh] bg-[#181818] border-t border-[#2d3139] rounded-t-2xl shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom duration-200 z-50">
+          <div className="relative w-full max-h-[82vh] h-[78vh] bg-[#181818] border-t border-[#2d3139] rounded-t-2xl shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom duration-200 z-10">
             {/* Drag Handle & Mobile Header */}
             <div className="pt-2.5 pb-2 px-4 flex items-center justify-between border-b border-[#2d3139]/80 shrink-0 bg-[#1c1d20] relative">
               <div className="w-10 h-1 bg-[#3c4048] rounded-full mx-auto absolute left-1/2 -translate-x-1/2 top-2" />

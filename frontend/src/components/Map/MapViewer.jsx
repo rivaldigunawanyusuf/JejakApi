@@ -341,7 +341,9 @@ const MapViewer = ({
 
     try {
       map.setStyle(BASEMAPS[externalCurrentBasemap].style);
-      map.once('styledata', () => {
+      const onStyleData = () => {
+        if (!map || !map.isStyleLoaded()) return;
+        map.off('styledata', onStyleData);
         try {
           addRiskLayers(map);
           addOverlayLayers(map);
@@ -351,7 +353,8 @@ const MapViewer = ({
         } catch (err) {
           captureError(err, { source: 'externalBasemap.styledata' });
         }
-      });
+      };
+      map.on('styledata', onStyleData);
     } catch (err) {
       captureError(err, { source: 'externalBasemap.setStyle' });
     }
@@ -592,6 +595,7 @@ const MapViewer = ({
   }, []);
 
   const addRiskLayers = (map) => {
+    if (!map || !map.isStyleLoaded()) return;
     // 0. National Epicenter Coverage Footprints (Visible from space, seamlessly blends into 1km² tactical grid)
     if (!map.getSource('national-epicenter-source')) {
       map.addSource('national-epicenter-source', {
@@ -835,9 +839,11 @@ const MapViewer = ({
         const color = cat === 'Bahaya' ? '#ef4444' : cat === 'Siaga' ? '#f59e0b' : '#10b981';
 
         // Update hover outline reticle
-        if (map.getLayer('oki-risk-hover')) {
-          map.setFilter('oki-risk-hover', ['==', 'cell_id', props.cell_id || '']);
-        }
+        try {
+          if (map.isStyleLoaded() && map.getLayer('oki-risk-hover')) {
+            map.setFilter('oki-risk-hover', ['==', 'cell_id', props.cell_id || '']);
+          }
+        } catch (_) {}
 
         const isMacro = map.getZoom() < 7.2;
 
@@ -861,9 +867,11 @@ const MapViewer = ({
 
     map.on('mouseleave', 'oki-risk-fill', () => {
       map.getCanvas().style.cursor = '';
-      if (map.getLayer('oki-risk-hover')) {
-        map.setFilter('oki-risk-hover', ['==', 'cell_id', '']);
-      }
+      try {
+        if (map.isStyleLoaded() && map.getLayer('oki-risk-hover')) {
+          map.setFilter('oki-risk-hover', ['==', 'cell_id', '']);
+        }
+      } catch (_) {}
       hoverPopup.remove();
     });
 
@@ -936,7 +944,14 @@ const MapViewer = ({
 
     // Clicking anywhere on empty background deselects the individual cell and returns to regional insights
     map.on('click', (e) => {
-      const activeLayers = ['oki-risk-fill', 'national-epicenter-fill'].filter((id) => map.getLayer(id));
+      if (!map.isStyleLoaded()) return;
+      const activeLayers = ['oki-risk-fill', 'national-epicenter-fill'].filter((id) => {
+        try {
+          return !!map.getLayer(id);
+        } catch (_) {
+          return false;
+        }
+      });
       const hit = activeLayers.length > 0 ? map.queryRenderedFeatures(e.point, { layers: activeLayers }) : [];
       if (!hit || hit.length === 0) {
         if (onSelectCell) onSelectCell(null);
@@ -945,6 +960,7 @@ const MapViewer = ({
   };
 
   const addOverlayLayers = (map) => {
+    if (!map || !map.isStyleLoaded()) return;
     // 2019 Hotspots
     if (!map.getSource('hotspots-2019')) {
       map.addSource('hotspots-2019', {
@@ -1199,50 +1215,60 @@ const MapViewer = ({
   // Replay visibility
   useEffect(() => {
     const map = mapInstance.current;
-    if (!map || !isLayerLoaded) return;
+    if (!map || !isLayerLoaded || !map.isStyleLoaded()) return;
 
-    if (map.getLayer('hotspots-2019-layer')) {
-      map.setLayoutProperty('hotspots-2019-layer', 'visibility', replayYear === 2019 ? 'visible' : 'none');
-    }
-    if (map.getLayer('hotspots-2023-layer')) {
-      map.setLayoutProperty('hotspots-2023-layer', 'visibility', replayYear === 2023 ? 'visible' : 'none');
-    }
+    try {
+      if (map.getLayer('hotspots-2019-layer')) {
+        map.setLayoutProperty('hotspots-2019-layer', 'visibility', replayYear === 2019 ? 'visible' : 'none');
+      }
+      if (map.getLayer('hotspots-2023-layer')) {
+        map.setLayoutProperty('hotspots-2023-layer', 'visibility', replayYear === 2023 ? 'visible' : 'none');
+      }
+    } catch (_) {}
   }, [replayYear, isLayerLoaded]);
 
   // Live NASA FIRMS Hotspots visibility
   useEffect(() => {
     const map = mapInstance.current;
-    if (!map || !isLayerLoaded) return;
+    if (!map || !isLayerLoaded || !map.isStyleLoaded()) return;
 
-    const vis = showLiveHotspots ? 'visible' : 'none';
-    if (map.getLayer('live-hotspots-layer')) {
-      map.setLayoutProperty('live-hotspots-layer', 'visibility', vis);
-    }
-    if (map.getLayer('live-hotspots-glow')) {
-      map.setLayoutProperty('live-hotspots-glow', 'visibility', vis);
-    }
+    try {
+      const vis = showLiveHotspots ? 'visible' : 'none';
+      if (map.getLayer('live-hotspots-layer')) {
+        map.setLayoutProperty('live-hotspots-layer', 'visibility', vis);
+      }
+      if (map.getLayer('live-hotspots-glow')) {
+        map.setLayoutProperty('live-hotspots-glow', 'visibility', vis);
+      }
+    } catch (_) {}
   }, [showLiveHotspots, isLayerLoaded]);
 
   // Conversion visibility
   useEffect(() => {
     const map = mapInstance.current;
-    if (!map || !isLayerLoaded) return;
+    if (!map || !isLayerLoaded || !map.isStyleLoaded()) return;
 
-    const vis = showConversionLayer ? 'visible' : 'none';
-    if (map.getLayer('conversion-fill')) {
-      map.setLayoutProperty('conversion-fill', 'visibility', vis);
-    }
-    if (map.getLayer('conversion-line')) {
-      map.setLayoutProperty('conversion-line', 'visibility', vis);
-    }
+    try {
+      const vis = showConversionLayer ? 'visible' : 'none';
+      if (map.getLayer('conversion-fill')) {
+        map.setLayoutProperty('conversion-fill', 'visibility', vis);
+      }
+      if (map.getLayer('conversion-line')) {
+        map.setLayoutProperty('conversion-line', 'visibility', vis);
+      }
+    } catch (_) {}
   }, [showConversionLayer, isLayerLoaded]);
 
   // Selected cell highlight
   useEffect(() => {
     const map = mapInstance.current;
-    if (map && map.getLayer('oki-risk-selected')) {
-      map.setFilter('oki-risk-selected', ['==', 'cell_id', selectedCellId || '']);
-    }
+    if (!map || !map.isStyleLoaded()) return;
+
+    try {
+      if (map.getLayer('oki-risk-selected')) {
+        map.setFilter('oki-risk-selected', ['==', 'cell_id', selectedCellId || '']);
+      }
+    } catch (_) {}
   }, [selectedCellId]);
 
 
@@ -1335,7 +1361,7 @@ const MapViewer = ({
       )}
 
       {/* Floating Tactical Map Controls on Top-Left (Enterprise Dark GIS Style) */}
-      <div id="tour-map-controls" className="absolute top-4 left-4 z-10 flex flex-col gap-1.5">
+      <div id="tour-map-controls" className="absolute top-[88px] left-2.5 sm:top-4 sm:left-4 z-10 flex flex-col gap-1.5">
         <div className="bg-[#181818] border border-[#2d3139] rounded overflow-hidden shadow-lg flex flex-col">
           <button
             onClick={handleZoomIn}
@@ -1375,133 +1401,135 @@ const MapViewer = ({
         </div>
       </div>
 
-      {/* Floating Tactical Region Navigation Toolbar - Never Collides with Sidebars */}
+      {/* Floating Tactical Region Navigation Toolbar - Never Collides with Sidebars or Controls */}
       <div
         id="tour-region-jumps"
-        className="absolute top-3 left-14 sm:left-16 z-20 flex items-center gap-1 bg-[#14161b]/95 backdrop-blur-xl border border-[#2d3139] hover:border-[#3c4048] p-1 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.6)] max-w-[calc(100%-70px)] sm:max-w-[calc(100%-90px)] transition-all"
+        className="absolute top-2 left-2 right-2 sm:left-16 sm:right-auto z-20 flex flex-col sm:flex-row items-stretch sm:items-center gap-1.5 sm:gap-1 bg-[#14161b]/95 backdrop-blur-xl border border-[#2d3139] hover:border-[#3c4048] p-1.5 sm:p-1 rounded-2xl sm:rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.6)] sm:max-w-[calc(100%-90px)] transition-all"
       >
-        {/* Left Scroll Chevron Button */}
-        <button
-          id="region-nav-scroll-left"
-          type="button"
-          onClick={() => handleScrollRegionNav(-160)}
-          disabled={!canScrollLeft}
-          className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-all ${
-            canScrollLeft
-              ? 'bg-[#1e2430] hover:bg-[#252f40] text-[#38bdf8] shadow-xs cursor-pointer hover:scale-110 active:scale-95 border border-[#38bdf8]/30'
-              : 'opacity-20 text-[#5f6368] cursor-not-allowed pointer-events-none'
-          }`}
-          title="Geser Wilayah ke Kiri"
-          aria-label="Scroll regions left"
-        >
-          <ChevronLeft className="w-3.5 h-3.5" />
-        </button>
-
-        {/* Scrollable Region Nav Item List */}
-        <div
-          ref={regionScrollRef}
-          onScroll={checkRegionScroll}
-          className="flex-1 min-w-0 flex items-center gap-1 overflow-x-auto scrollbar-none scroll-smooth px-0.5"
-        >
-          {isTilesLoading && (
-            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#1e2430] text-[10px] font-mono text-[#38bdf8] shrink-0 border border-[#38bdf8]/30 animate-pulse">
-              <Loader2 className="w-3 h-3 animate-spin text-[#38bdf8]" />
-              <span className="hidden sm:inline">55.5k Sel...</span>
-            </div>
-          )}
-
-          {/* 1. National Overview Button (Primary Anchor) */}
+        {/* Row 1: Region Scroller */}
+        <div className="flex items-center gap-1 min-w-0 w-full sm:w-auto">
+          {/* Left Scroll Chevron Button */}
           <button
-            onClick={() => handleFlyToRegion(REGION_JUMPS[0])}
-            className={`px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all shrink-0 ${
-              activeRegion === 'all'
-                ? 'bg-[#252f40] text-[#38bdf8] border border-[#38bdf8]/50 shadow-[0_0_12px_rgba(56,189,248,0.25)]'
-                : 'text-[#9aa0a6] hover:text-[#e8eaed] hover:bg-[#202124]'
+            id="region-nav-scroll-left"
+            type="button"
+            onClick={() => handleScrollRegionNav(-160)}
+            disabled={!canScrollLeft}
+            className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center shrink-0 transition-all ${
+              canScrollLeft
+                ? 'bg-[#1e2430] hover:bg-[#252f40] text-[#38bdf8] shadow-xs cursor-pointer hover:scale-110 active:scale-95 border border-[#38bdf8]/30'
+                : 'opacity-20 text-[#5f6368] cursor-not-allowed pointer-events-none'
             }`}
-            title="Tampilan Nasional: Seluruh Indonesia (55.532 Sel Grid 1 km²)"
+            title="Geser Wilayah ke Kiri"
+            aria-label="Scroll regions left"
           >
-            <span className="text-sm">🇮🇩</span>
-            <span>Seluruh Indonesia</span>
-            <span className="text-[10px] font-mono px-1.5 py-0.2 bg-[#1b202a] rounded-full text-[#38bdf8] border border-[#38bdf8]/20">
-              55.5k
-            </span>
+            <ChevronLeft className="w-3.5 h-3.5" />
           </button>
 
-          {/* Vertical Divider */}
-          <span className="w-px h-4 bg-[#2d3139] mx-0.5 shrink-0" />
+          {/* Scrollable Region Nav Item List */}
+          <div
+            ref={regionScrollRef}
+            onScroll={checkRegionScroll}
+            className="flex-1 min-w-0 flex items-center gap-1 overflow-x-auto scrollbar-none scroll-smooth px-0.5"
+          >
+            {isTilesLoading && (
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#1e2430] text-[10px] font-mono text-[#38bdf8] shrink-0 border border-[#38bdf8]/30 animate-pulse">
+                <Loader2 className="w-3 h-3 animate-spin text-[#38bdf8]" />
+                <span className="hidden sm:inline">55.5k Sel...</span>
+              </div>
+            )}
 
-          {/* 2. Direct Region Buttons for 6 Epicenters (Clean, Direct & Tactical) */}
-          {REGION_JUMPS.slice(1).map((reg) => {
-            const isAct = activeRegion === reg.id;
-            return (
-              <button
-                key={reg.id}
-                onClick={() => handleFlyToRegion(reg)}
-                className={`px-2.5 py-1 rounded-full text-xs font-medium transition-all flex items-center gap-1.5 shrink-0 ${
-                  isAct
-                    ? 'bg-[#252f40] text-[#38bdf8] border border-[#38bdf8]/50 shadow-sm font-semibold'
-                    : 'text-[#9aa0a6] hover:text-[#e8eaed] hover:bg-[#202124]'
-                }`}
-                title={`${reg.name} (${reg.province}) • ${reg.cells} • ${reg.badge}`}
-              >
-                <span
-                  className="w-1.5 h-1.5 rounded-full shrink-0"
-                  style={{ backgroundColor: reg.dot }}
-                />
-                <span>{reg.shortName}</span>
-                {reg.badge === 'Pilot Utama' && (
-                  <span className="text-[9px] font-bold text-amber-400 bg-amber-500/10 px-1 rounded border border-amber-500/30">
-                    Pilot
-                  </span>
-                )}
-              </button>
-            );
-          })}
+            {/* 1. National Overview Button (Primary Anchor) */}
+            <button
+              onClick={() => handleFlyToRegion(REGION_JUMPS[0])}
+              className={`px-2.5 sm:px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all shrink-0 whitespace-nowrap ${
+                activeRegion === 'all'
+                  ? 'bg-[#252f40] text-[#38bdf8] border border-[#38bdf8]/50 shadow-[0_0_12px_rgba(56,189,248,0.25)]'
+                  : 'text-[#9aa0a6] hover:text-[#e8eaed] hover:bg-[#202124]'
+              }`}
+              title="Tampilan Nasional: Seluruh Indonesia (55.532 Sel Grid 1 km²)"
+            >
+              <span className="text-sm">🇮🇩</span>
+              <span>Seluruh Indonesia</span>
+              <span className="text-[10px] font-mono px-1.5 py-0.2 bg-[#1b202a] rounded-full text-[#38bdf8] border border-[#38bdf8]/20">
+                55.5k
+              </span>
+            </button>
 
-          {/* 3. POC Scope Modal Trigger Button */}
-          {onOpenPocInfo && (
-            <>
-              <span className="w-px h-4 bg-[#2d3139] mx-0.5 shrink-0" />
-              <button
-                id="tour-poc-info-btn"
-                onClick={onOpenPocInfo}
-                className="flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 whitespace-nowrap transition-colors shrink-0"
-                title="Pelajari mengapa 6 wilayah ini yang dipilih pada tahap demo awal"
-              >
-                <Info className="w-3.5 h-3.5 text-amber-400" />
-                <span>Wilayah Demo</span>
-              </button>
-            </>
-          )}
+            {/* Vertical Divider */}
+            <span className="w-px h-4 bg-[#2d3139] mx-0.5 shrink-0" />
 
+            {/* 2. Direct Region Buttons for 6 Epicenters (Clean, Direct & Tactical) */}
+            {REGION_JUMPS.slice(1).map((reg) => {
+              const isAct = activeRegion === reg.id;
+              return (
+                <button
+                  key={reg.id}
+                  onClick={() => handleFlyToRegion(reg)}
+                  className={`px-2.5 py-1 rounded-full text-xs font-medium transition-all flex items-center gap-1.5 shrink-0 whitespace-nowrap ${
+                    isAct
+                      ? 'bg-[#252f40] text-[#38bdf8] border border-[#38bdf8]/50 shadow-sm font-semibold'
+                      : 'text-[#9aa0a6] hover:text-[#e8eaed] hover:bg-[#202124]'
+                  }`}
+                  title={`${reg.name} (${reg.province}) • ${reg.cells} • ${reg.badge}`}
+                >
+                  <span
+                    className="w-1.5 h-1.5 rounded-full shrink-0"
+                    style={{ backgroundColor: reg.dot }}
+                  />
+                  <span>{reg.shortName}</span>
+                  {reg.badge === 'Pilot Utama' && (
+                    <span className="text-[9px] font-bold text-amber-400 bg-amber-500/10 px-1 rounded border border-amber-500/30">
+                      Pilot
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+
+            {/* 3. POC Scope Modal Trigger Button */}
+            {onOpenPocInfo && (
+              <>
+                <span className="w-px h-4 bg-[#2d3139] mx-0.5 shrink-0" />
+                <button
+                  id="tour-poc-info-btn"
+                  onClick={onOpenPocInfo}
+                  className="flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium text-amber-400 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 whitespace-nowrap transition-colors shrink-0"
+                  title="Pelajari mengapa 6 wilayah ini yang dipilih pada tahap demo awal"
+                >
+                  <Info className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Wilayah Demo</span>
+                </button>
+              </>
+            )}
+          </div>
+
+          {/* Right Scroll Chevron Button */}
+          <button
+            id="region-nav-scroll-right"
+            type="button"
+            onClick={() => handleScrollRegionNav(160)}
+            disabled={!canScrollRight}
+            className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center shrink-0 transition-all ${
+              canScrollRight
+                ? 'bg-[#1e2430] hover:bg-[#252f40] text-[#38bdf8] shadow-xs cursor-pointer hover:scale-110 active:scale-95 border border-[#38bdf8]/30 animate-pulse'
+                : 'opacity-20 text-[#5f6368] cursor-not-allowed pointer-events-none'
+            }`}
+            title="Geser Wilayah ke Kanan"
+            aria-label="Scroll regions right"
+          >
+            <ChevronRight className="w-3.5 h-3.5" />
+          </button>
         </div>
 
-        {/* Right Scroll Chevron Button */}
-        <button
-          id="region-nav-scroll-right"
-          type="button"
-          onClick={() => handleScrollRegionNav(160)}
-          disabled={!canScrollRight}
-          className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-all ${
-            canScrollRight
-              ? 'bg-[#1e2430] hover:bg-[#252f40] text-[#38bdf8] shadow-xs cursor-pointer hover:scale-110 active:scale-95 border border-[#38bdf8]/30 animate-pulse'
-              : 'opacity-20 text-[#5f6368] cursor-not-allowed pointer-events-none'
-          }`}
-          title="Geser Wilayah ke Kanan"
-          aria-label="Scroll regions right"
-        >
-          <ChevronRight className="w-3.5 h-3.5" />
-        </button>
+        {/* Vertical Divider on Desktop */}
+        <span className="hidden sm:block w-px h-4 bg-[#2d3139] mx-0.5 shrink-0" />
 
-        {/* Vertical Divider */}
-        <span className="w-px h-4 bg-[#2d3139] mx-0.5 shrink-0" />
-
-        {/* 4. Live NASA FIRMS Hotspot NRT Toggle & Scope Selector - Always Pinned & Visible */}
-        <div className="flex items-center bg-[#181818] border border-[#2d3139] rounded-full p-0.5 shrink-0 shadow-sm">
+        {/* Row 2: Live NASA FIRMS Hotspot NRT Toggle & Scope Selector */}
+        <div className="flex items-center justify-between sm:justify-start bg-[#181818] border border-[#2d3139] rounded-xl sm:rounded-full p-0.5 shrink-0 shadow-sm w-full sm:w-auto">
           <button
             type="button"
             onClick={() => setShowLiveHotspots(!showLiveHotspots)}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 px-2 sm:px-2.5 py-1 rounded-lg sm:rounded-full text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
               showLiveHotspots
                 ? 'bg-red-500/20 text-red-300 border border-red-500/40 shadow-[0_0_10px_rgba(239,68,68,0.25)]'
                 : 'text-[#9aa0a6] hover:text-[#e8eaed]'
@@ -1520,13 +1548,13 @@ const MapViewer = ({
             </span>
           </button>
 
-          {/* Scope Toggle: Wilayah Rawan (1.299) vs Seluruh Indonesia (5.275) */}
+          {/* Scope Toggle: Wilayah Rawan vs Seluruh Indonesia */}
           {showLiveHotspots && (
             <div className="flex items-center gap-0.5 pl-1 pr-1 text-[10px]">
               <button
                 type="button"
                 onClick={() => setHotspotScope('epicenters')}
-                className={`px-2 py-0.5 rounded-full transition-colors font-medium cursor-pointer ${
+                className={`px-2 py-0.5 rounded-lg sm:rounded-full transition-colors font-medium cursor-pointer ${
                   hotspotScope === 'epicenters'
                     ? 'bg-[#282c34] text-[#38bdf8] font-bold border border-[#38bdf8]/40 shadow-xs'
                     : 'text-[#9aa0a6] hover:text-[#e8eaed]'
@@ -1538,7 +1566,7 @@ const MapViewer = ({
               <button
                 type="button"
                 onClick={() => setHotspotScope('all')}
-                className={`px-2 py-0.5 rounded-full transition-colors font-medium cursor-pointer ${
+                className={`px-2 py-0.5 rounded-lg sm:rounded-full transition-colors font-medium cursor-pointer ${
                   hotspotScope === 'all'
                     ? 'bg-[#282c34] text-amber-300 font-bold border border-amber-400/40 shadow-xs'
                     : 'text-[#9aa0a6] hover:text-[#e8eaed]'

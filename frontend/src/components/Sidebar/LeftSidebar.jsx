@@ -523,124 +523,18 @@ const LeftSidebar = ({
   };
 
   const navItems = [
-    { id: 'f1', label: 'Tampilan Peta & Lapisan Gambut', icon: Layers },
-    { id: 'search', label: 'Cari Wilayah & Titik Pantau', icon: Search },
-    { id: 'f2', label: 'Daftar Lokasi Paling Rawan', icon: ShieldAlert },
-    { id: 'f3', label: 'Riwayat & Uji Keunggulan AI', icon: History },
-    { id: 'f4', label: 'Peringatan Bahaya (Telegram)', icon: BellRing },
-    { id: 'f5', label: 'Pantau Pembukaan Lahan Baru', icon: Trees },
-    { id: 'f6', label: 'Kamera Drone Patroli Udara', icon: Camera },
-    { id: 'poc', label: '6 Wilayah Pantauan Utama', icon: FlaskConical },
+    { id: 'f1', label: 'Tampilan Peta & Lapisan Gambut', shortLabel: 'Peta & Gambut', icon: Layers },
+    { id: 'search', label: 'Cari Wilayah & Titik Pantau', shortLabel: 'Cari Titik', icon: Search },
+    { id: 'f2', label: 'Daftar Lokasi Paling Rawan', shortLabel: 'Patroli Darat', icon: ShieldAlert },
+    { id: 'f3', label: 'Riwayat & Uji Keunggulan AI', shortLabel: 'Riwayat AI', icon: History },
+    { id: 'f4', label: 'Peringatan Bahaya (Telegram)', shortLabel: 'Peringatan', icon: BellRing },
+    { id: 'f5', label: 'Pantau Pembukaan Lahan Baru', shortLabel: 'Alih Lahan', icon: Trees },
+    { id: 'f6', label: 'Kamera Drone Patroli Udara', shortLabel: 'Kamera Drone', icon: Camera },
+    { id: 'poc', label: '6 Wilayah Pantauan Utama', shortLabel: '6 Wilayah Demo', icon: FlaskConical },
   ];
 
-  return (
-    <>
-      {/* Backdrop for Mobile */}
-      {isExpanded && (
-        <div
-          className="md:hidden fixed inset-0 bg-black/60 backdrop-blur-xs z-40 animate-in fade-in duration-150"
-          onClick={() => setIsExpanded(false)}
-        />
-      )}
-
-      <aside className="relative flex h-[calc(100vh-52px)] z-20 shrink-0 select-none">
-        {/* 1. Icon Rail (Visible on Desktop >= 768px, Hidden on Mobile) */}
-        <div id="tour-left-rail" className="hidden md:flex w-[56px] h-full bg-[#181818] border-r border-[#2d3139] flex-col items-center py-3 justify-between">
-          <div className="flex flex-col items-center gap-1.5 w-full px-2">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = activeTool === item.id && isExpanded;
-              const isPoc = item.id === 'poc';
-              return (
-                <button
-                  key={item.id}
-                  id={`tour-tool-${item.id}`}
-                  onClick={() => handleToolClick(item.id)}
-                  className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors relative group ${
-                    isActive
-                      ? isPoc
-                        ? 'bg-amber-500/20 text-amber-400 border border-amber-500/40 shadow-sm'
-                        : 'bg-[#282c34] text-[#8ab4f8] shadow-sm'
-                      : isPoc
-                      ? 'text-amber-400 hover:text-amber-300 hover:bg-amber-500/10'
-                      : 'text-[#9aa0a6] hover:text-[#e8eaed] hover:bg-[#202124]'
-                  }`}
-                  title={item.label}
-                >
-                  <Icon className="w-5 h-5" />
-                  {/* Tooltip on hover when rail collapsed */}
-                  {!isExpanded && (
-                    <div className="absolute left-12 ml-2 px-2.5 py-1 bg-[#202124] border border-[#303134] text-[#e8eaed] text-xs font-medium rounded shadow-xl whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50">
-                      {item.label}
-                    </div>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Expand/Collapse Toggle Button */}
-          <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="w-8 h-8 rounded-full bg-[#202124] hover:bg-[#2d3137] border border-[#303134] text-[#9aa0a6] hover:text-[#e8eaed] flex items-center justify-center transition-colors"
-            title={isExpanded ? 'Tutup Panel' : 'Buka Panel'}
-          >
-            {isExpanded ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
-          </button>
-        </div>
-
-        {/* 2. Expanded Content Panel (Slide-over drawer on mobile, docked panel on desktop) */}
-        {isExpanded && (
-          <div
-            id="tour-panel-content"
-            className={`fixed inset-y-[52px] left-0 w-[320px] max-w-[92vw] md:relative md:inset-y-0 ${
-              activeTool === 'f6' ? 'md:w-[460px]' : 'md:w-[360px]'
-            } h-full bg-[#202124] border-r border-[#2d3139] flex flex-col shadow-2xl z-50 md:z-auto animate-in slide-in-from-left duration-200 transition-all`}
-          >
-            {/* Mobile Tool Switcher Tabs */}
-            <div className="flex md:hidden items-center justify-around p-2 bg-[#181818] border-b border-[#2d3139] shrink-0">
-              {navItems.map((item) => {
-                const Icon = item.icon;
-                const isActive = activeTool === item.id;
-                const isPoc = item.id === 'poc';
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => setActiveTool(item.id)}
-                    className={`p-2 rounded-lg flex flex-col items-center gap-1 transition-colors ${
-                      isActive
-                        ? isPoc
-                          ? 'bg-amber-500/20 text-amber-400 border border-amber-500/40'
-                          : 'bg-[#282c34] text-[#8ab4f8]'
-                        : isPoc
-                        ? 'text-amber-400/80 hover:text-amber-300'
-                        : 'text-[#9aa0a6] hover:text-[#e8eaed]'
-                    }`}
-                    title={item.label}
-                  >
-                    <Icon className="w-4 h-4" />
-                    <span className="text-[9px] uppercase font-mono font-medium">{item.id.toUpperCase()}</span>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Panel Header */}
-            <div className="h-12 px-4 border-b border-[#2d3139] flex items-center justify-between bg-[#1c1d20] shrink-0">
-              <span className="font-medium text-xs text-[#e8eaed] uppercase tracking-wider flex items-center gap-2">
-                {navItems.find((n) => n.id === activeTool)?.label}
-              </span>
-              <button
-                onClick={() => setIsExpanded(false)}
-                className="text-[#9aa0a6] hover:text-[#e8eaed] p-1.5 rounded-full hover:bg-[#282c34] transition-colors"
-                title="Tutup Menu Alat"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-          {/* Panel Content based on Active Tool */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 text-xs text-[#e8eaed]">
+  const renderActiveToolContent = () => (
+    <div className="flex-1 overflow-y-auto p-4 space-y-4 text-xs text-[#e8eaed]">
             {/* Tool F1: Overview & Search */}
             {/* Tool F1: Overview, Basemaps & Peatland Layers */}
             {activeTool === 'f1' && (
@@ -2578,9 +2472,148 @@ const LeftSidebar = ({
                 </div>
               </div>
             )}
+    </div>
+  );
+
+  return (
+    <>
+      {/* 1. Mobile Drawer & Backdrop (Full-height slide-over at z-50, immune to parent stacking context) */}
+      {isExpanded && (
+        <div className="md:hidden fixed inset-0 z-50 overflow-hidden">
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-xs animate-in fade-in duration-150"
+            onClick={() => setIsExpanded(false)}
+            aria-label="Tutup panel sidebar"
+          />
+
+          {/* Slide-over Drawer (full height, properly in front of backdrop) */}
+          <div
+            id="tour-panel-content-mobile"
+            className="fixed inset-y-0 left-0 w-[320px] sm:w-[360px] max-w-[86vw] h-full bg-[#202124] border-r border-[#2d3139] flex flex-col shadow-2xl z-10 animate-in slide-in-from-left duration-200"
+          >
+            {/* Drawer Header */}
+            <div className="h-12 px-3.5 border-b border-[#2d3139] flex items-center justify-between bg-[#1c1d20] shrink-0">
+              <span className="font-semibold text-xs text-[#e8eaed] uppercase tracking-wider flex items-center gap-2 truncate">
+                {navItems.find((n) => n.id === activeTool)?.label}
+              </span>
+              <button
+                onClick={() => setIsExpanded(false)}
+                className="text-[#9aa0a6] hover:text-[#e8eaed] p-1.5 rounded-full hover:bg-[#282c34] transition-colors cursor-pointer shrink-0"
+                title="Tutup Menu Alat"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Mobile Tool Switcher Tabs (Horizontally scrollable with clean pills) */}
+            <div className="flex items-center gap-1.5 p-2 bg-[#181818] border-b border-[#2d3139] shrink-0 overflow-x-auto scrollbar-none">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                const isActive = activeTool === item.id;
+                const isPoc = item.id === 'poc';
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveTool(item.id)}
+                    className={`px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 shrink-0 transition-all text-xs cursor-pointer ${
+                      isActive
+                        ? isPoc
+                          ? 'bg-amber-500/20 text-amber-300 border border-amber-500/50 shadow-sm font-semibold'
+                          : 'bg-[#282c34] text-[#38bdf8] border border-[#38bdf8]/40 shadow-sm font-semibold'
+                        : isPoc
+                        ? 'text-amber-400/80 hover:text-amber-300 hover:bg-[#202124] border border-transparent'
+                        : 'text-[#9aa0a6] hover:text-[#e8eaed] hover:bg-[#202124] border border-transparent'
+                    }`}
+                    title={item.label}
+                  >
+                    <Icon className="w-3.5 h-3.5 shrink-0" />
+                    <span className="text-[11px] font-medium whitespace-nowrap">
+                      {item.shortLabel || item.id.toUpperCase()}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Panel Content Body */}
+            {renderActiveToolContent()}
           </div>
         </div>
       )}
+
+      {/* 2. Desktop Docked Rail & Panel (>= md screens) */}
+      <aside className="hidden md:flex relative h-[calc(100vh-52px)] z-20 shrink-0 select-none">
+        {/* Icon Rail */}
+        <div id="tour-left-rail" className="w-[56px] h-full bg-[#181818] border-r border-[#2d3139] flex flex-col items-center py-3 justify-between">
+          <div className="flex flex-col items-center gap-1.5 w-full px-2">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeTool === item.id && isExpanded;
+              const isPoc = item.id === 'poc';
+              return (
+                <button
+                  key={item.id}
+                  id={`tour-tool-${item.id}`}
+                  onClick={() => handleToolClick(item.id)}
+                  className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors relative group cursor-pointer ${
+                    isActive
+                      ? isPoc
+                        ? 'bg-amber-500/20 text-amber-400 border border-amber-500/40 shadow-sm'
+                        : 'bg-[#282c34] text-[#8ab4f8] shadow-sm'
+                      : isPoc
+                      ? 'text-amber-400 hover:text-amber-300 hover:bg-amber-500/10'
+                      : 'text-[#9aa0a6] hover:text-[#e8eaed] hover:bg-[#202124]'
+                  }`}
+                  title={item.label}
+                >
+                  <Icon className="w-5 h-5" />
+                  {!isExpanded && (
+                    <div className="absolute left-12 ml-2 px-2.5 py-1 bg-[#202124] border border-[#303134] text-[#e8eaed] text-xs font-medium rounded shadow-xl whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-50">
+                      {item.label}
+                    </div>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Expand/Collapse Toggle Button */}
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="w-8 h-8 rounded-full bg-[#202124] hover:bg-[#2d3137] border border-[#303134] text-[#9aa0a6] hover:text-[#e8eaed] flex items-center justify-center transition-colors cursor-pointer"
+            title={isExpanded ? 'Tutup Panel' : 'Buka Panel'}
+          >
+            {isExpanded ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+          </button>
+        </div>
+
+        {/* Expanded Content Panel on Desktop */}
+        {isExpanded && (
+          <div
+            id="tour-panel-content"
+            className={`relative ${
+              activeTool === 'f6' ? 'w-[460px]' : 'w-[360px]'
+            } h-full bg-[#202124] border-r border-[#2d3139] flex flex-col shadow-2xl animate-in slide-in-from-left duration-200 transition-all`}
+          >
+            {/* Panel Header */}
+            <div className="h-12 px-4 border-b border-[#2d3139] flex items-center justify-between bg-[#1c1d20] shrink-0">
+              <span className="font-medium text-xs text-[#e8eaed] uppercase tracking-wider flex items-center gap-2">
+                {navItems.find((n) => n.id === activeTool)?.label}
+              </span>
+              <button
+                onClick={() => setIsExpanded(false)}
+                className="text-[#9aa0a6] hover:text-[#e8eaed] p-1.5 rounded-full hover:bg-[#282c34] transition-colors cursor-pointer"
+                title="Tutup Menu Alat"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Panel Content Body */}
+            {renderActiveToolContent()}
+          </div>
+        )}
       </aside>
     </>
   );

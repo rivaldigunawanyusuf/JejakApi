@@ -469,9 +469,18 @@ const TourGuide = ({
       setTargetRect(null);
       return;
     }
+    // On mobile screens (< 768px), center tour card cleanly to prevent offscreen displacement
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      setTargetRect(null);
+      return;
+    }
     const element = document.querySelector(currentStep.target);
     if (element) {
       const rect = element.getBoundingClientRect();
+      if (rect.width === 0 || rect.height === 0) {
+        setTargetRect(null);
+        return;
+      }
       setTargetRect({
         top: rect.top,
         left: rect.left,
@@ -530,6 +539,9 @@ const TourGuide = ({
   };
 
   const handleSkip = () => {
+    try {
+      localStorage.setItem('jejak_tour_seen', 'true');
+    } catch (_) {}
     if (onSelectCell) onSelectCell(null);
     if (onSelectRegion) onSelectRegion(null);
     if (onFlyTo) onFlyTo(119.5, -3.2, 4.4);
@@ -538,6 +550,9 @@ const TourGuide = ({
   };
 
   const handleFinish = () => {
+    try {
+      localStorage.setItem('jejak_tour_seen', 'true');
+    } catch (_) {}
     if (onSelectCell) onSelectCell(null);
     if (onSelectRegion) onSelectRegion(null);
     if (onFlyTo) onFlyTo(119.5, -3.2, 4.4);
@@ -657,7 +672,7 @@ const TourGuide = ({
       <div
         ref={popoverRef}
         style={popoverStyle}
-        className="w-[400px] max-w-[calc(100vw-32px)] max-h-[calc(100vh-80px)] bg-[#1c1d22] border border-[#383d48] rounded-xl shadow-2xl z-50 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200"
+        className="w-[400px] max-w-[calc(100vw-24px)] max-h-[calc(100vh-60px)] bg-[#1c1d22] border border-[#383d48] rounded-xl shadow-2xl z-50 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200"
       >
         {/* Progress Bar Line */}
         <div className="w-full h-1 bg-[#282c35] shrink-0">

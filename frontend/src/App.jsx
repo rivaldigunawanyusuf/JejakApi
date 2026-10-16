@@ -11,6 +11,7 @@ import nationalEpicenterCoverage from './data/national_epicenter_coverage.json';
 function App() {
   const [activeTool, setActiveTool] = useState('f1');
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false);
+  const [isInspectorExpanded, setIsInspectorExpanded] = useState(() => typeof window !== 'undefined' && window.innerWidth >= 768);
   const [selectedCellId, setSelectedCellId] = useState(null);
   const [selectedRegion, setSelectedRegion] = useState(null); // null defaults to Seluruh Indonesia
   const [replayYear, setReplayYear] = useState(2026);
@@ -27,6 +28,9 @@ function App() {
 
   const autoOpenTourOnce = () => {
     if (tourAutoOpenedRef.current) return;
+    try {
+      if (localStorage.getItem('jejak_tour_seen') === 'true') return;
+    } catch (_) {}
     tourAutoOpenedRef.current = true;
     setShowTour(true);
   };
@@ -35,10 +39,6 @@ function App() {
     fetchStatsSummary()
       .then((data) => setStats(data))
       .catch((err) => console.error('Failed to fetch summary stats:', err));
-
-    try {
-      localStorage.removeItem('jejak_tour_seen');
-    } catch (_) {}
 
     // Fallback in case the map never reports ready (slow network)
     const timer = setTimeout(autoOpenTourOnce, 4500);
@@ -52,6 +52,12 @@ function App() {
   const handleSelectCell = (cellId, coords = null) => {
     setSelectedCellId(cellId);
     if (cellId) {
+      // On mobile, opening inspector should close left sidebar
+      if (typeof window !== 'undefined' && window.innerWidth < 768) {
+        setIsSidebarExpanded(false);
+      }
+      setIsInspectorExpanded(true);
+
       let regionId = 'oki';
       if (cellId.startsWith('KALBAR_')) regionId = 'kalbar';
       else if (cellId.startsWith('KALTENG_')) regionId = 'kalteng';
@@ -106,8 +112,20 @@ function App() {
       {/* 1. Top Minimalist Operations Header */}
       <TopHeader
         stats={stats}
-        onStartTour={() => setShowTour(true)}
-        onOpenTools={() => setIsSidebarExpanded((prev) => !prev)}
+        onStartTour={() => {
+          setIsSidebarExpanded(false);
+          setIsInspectorExpanded(false);
+          setShowTour(true);
+        }}
+        onOpenTools={() => {
+          setIsSidebarExpanded((prev) => {
+            const next = !prev;
+            if (next && typeof window !== 'undefined' && window.innerWidth < 768) {
+              setIsInspectorExpanded(false);
+            }
+            return next;
+          });
+        }}
         onSelectCell={handleSelectCell}
         onFlyTo={handleFlyTo}
       />
@@ -119,7 +137,12 @@ function App() {
           activeTool={activeTool}
           setActiveTool={setActiveTool}
           isExpanded={isSidebarExpanded}
-          setIsExpanded={setIsSidebarExpanded}
+          setIsExpanded={(expanded) => {
+            setIsSidebarExpanded(expanded);
+            if (expanded && typeof window !== 'undefined' && window.innerWidth < 768) {
+              setIsInspectorExpanded(false);
+            }
+          }}
           currentBasemap={currentBasemap}
           onSelectBasemap={setCurrentBasemap}
           onSelectCell={handleSelectCell}
@@ -128,7 +151,11 @@ function App() {
           setReplayYear={setReplayYear}
           showConversionLayer={showConversionLayer}
           setShowConversionLayer={setShowConversionLayer}
-          onOpenPocModal={() => setShowPocInfo(true)}
+          onOpenPocModal={() => {
+            setIsSidebarExpanded(false);
+            setIsInspectorExpanded(false);
+            setShowPocInfo(true);
+          }}
         />
 
         {/* Center Hero Map Canvas */}
@@ -138,6 +165,9 @@ function App() {
           onOpenBasemapPanel={() => {
             setActiveTool('f1');
             setIsSidebarExpanded(true);
+            if (typeof window !== 'undefined' && window.innerWidth < 768) {
+              setIsInspectorExpanded(false);
+            }
           }}
           selectedCellId={selectedCellId}
           onSelectCell={handleSelectCell}
@@ -147,7 +177,11 @@ function App() {
           showConversionLayer={showConversionLayer}
           mapRefOut={mapRef}
           onMapReady={handleMapReady}
-          onOpenPocInfo={() => setShowPocInfo(true)}
+          onOpenPocInfo={() => {
+            setIsSidebarExpanded(false);
+            setIsInspectorExpanded(false);
+            setShowPocInfo(true);
+          }}
         />
 
         {/* Right Data & TreeSHAP Inspector (Docked & Collapsible) */}
@@ -158,7 +192,18 @@ function App() {
           onSelectRegion={handleSelectRegion}
           onFlyTo={handleFlyTo}
           stats={stats}
-          onOpenPocInfo={() => setShowPocInfo(true)}
+          onOpenPocInfo={() => {
+            setIsSidebarExpanded(false);
+            setIsInspectorExpanded(false);
+            setShowPocInfo(true);
+          }}
+          isExpanded={isInspectorExpanded}
+          setIsExpanded={(expanded) => {
+            setIsInspectorExpanded(expanded);
+            if (expanded && typeof window !== 'undefined' && window.innerWidth < 768) {
+              setIsSidebarExpanded(false);
+            }
+          }}
         />
       </div>
 
