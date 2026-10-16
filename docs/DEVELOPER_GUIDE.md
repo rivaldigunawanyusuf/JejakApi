@@ -366,16 +366,18 @@ Perintah ini akan mengompilasi bundel statis ke `frontend/dist/` dan otomatis me
 
 ---
 
-## 8. Panduan Deployment VPS Production
-
-Untuk panduan mendalam tentang deployment server, Nginx reverse proxy, dan sertifikat SSL, silakan merujuk pada dokumen **[docs/DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)**.
-
-### Perintah One-Line Update VPS:
-Perintah berikut dirancang **100% aman dan terisolasi** untuk direktori project tanpa mematikan proses PM2 atau Docker dari aplikasi lain di VPS Anda:
-
+## 8. Panduan Deployment Production
+ 
+Untuk panduan mendalam tentang arsitektur server, konfigurasi Docker Compose, Nginx reverse proxy, dan sertifikat SSL, silakan merujuk pada dokumen **[docs/DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)**.
+ 
+### Perintah Pembaruan Standar Produksi (Docker Compose):
+Jalankan pembaruan berkala dengan menarik perubahan dari git dan membangun ulang kontainer backend:
+ 
 ```bash
-cd /var/www/jejak-api-demo && git checkout -- frontend/package-lock.json 2>/dev/null && git pull origin main && (docker compose up -d --build backend 2>/dev/null || docker compose restart backend 2>/dev/null || sudo systemctl restart jejak-api 2>/dev/null || true) && (cd frontend && npm install && npm run build && mkdir -p dist/tiles && cp -f public/tiles/oki_risk_latest.pmtiles dist/tiles/ && chmod -R 755 dist && chmod 644 dist/tiles/oki_risk_latest.pmtiles) && (sudo systemctl reload nginx 2>/dev/null || sudo nginx -s reload 2>/dev/null || true) && (sleep 2 && curl -sf http://localhost:8000/api/health >/dev/null && echo "✅ Backend Sehat!") && (curl -sf "http://localhost:8000/api/live/hotspots?only_epicenters=true" >/dev/null && echo "🛰️ Titik Api NASA FIRMS Aktif!") && echo "🎉 Update Berhasil! Sistem Siap Digunakan!"
+git pull origin main
+docker compose up -d --build
 ```
+
 
 ---
 

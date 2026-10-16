@@ -1,36 +1,33 @@
-# 🚀 Panduan Deployment & Pembaruan VPS (Production Deployment Guide)
+# 🚀 Panduan Deployment Produksi (Production Deployment Guide)
 
-Dokumen ini memuat panduan komprehensif untuk melakukan deployment awal dan pembaruan (*rolling update*) aplikasi **JEJAK API** pada server VPS Linux (Ubuntu 22.04 LTS atau sejenisnya).
-
-> [!IMPORTANT]
-> **Isolasi Multi-Project Server:**
-> Perintah pembaruan di bawah ini dirancang **100% aman dan terisolasi** untuk direktori project `/var/www/jejak-api-demo`. Prosedur ini **tidak akan merestart PM2 global atau mengganggu project lain** yang sedang berjalan di VPS Anda.
+Dokumen ini memuat panduan komprehensif untuk melakukan deployment awal dan pembaruan (*rolling update*) aplikasi **JEJAK API** pada server Linux / VPS (Ubuntu 22.04 LTS atau sejenisnya).
 
 ---
 
-## ⚡ 1. One-Line Update Command (Pembaruan Cepat di VPS)
+## ⚡ 1. Panduan Pembaruan Cepat (Rolling Update)
 
-Jalankan perintah satu baris berikut di terminal VPS untuk menarik pembaruan kode terbaru dari Git, memperbarui build frontend, memastikan ubin PMTiles termuat, me-restart backend, dan memverifikasi kesehatan sistem serta data satelit NASA FIRMS:
+Jalankan perintah berikut di direktori proyek pada server untuk menarik pembaruan kode terbaru dari Git, memperbarui build frontend, memastikan ubin PMTiles termuat, me-restart backend, dan memverifikasi kesehatan sistem:
 
 ```bash
-cd /var/www/jejak-api-demo && git checkout -- frontend/package-lock.json 2>/dev/null && git pull origin main && (docker compose up -d --build backend 2>/dev/null || docker compose restart backend 2>/dev/null || sudo systemctl restart jejak-api 2>/dev/null || true) && (cd frontend && npm install && npm run build && mkdir -p dist/tiles && cp -f public/tiles/oki_risk_latest.pmtiles dist/tiles/ && chmod -R 755 dist && chmod 644 dist/tiles/oki_risk_latest.pmtiles) && (sudo systemctl reload nginx 2>/dev/null || sudo nginx -s reload 2>/dev/null || true) && (sleep 2 && curl -sf http://localhost:8000/api/health >/dev/null && echo "✅ Backend Sehat!") && echo "🚀 Update Sukses: Sistem Berhasil Diperbarui!"
+git pull origin main
+docker compose up -d --build backend
+cd frontend && npm install && npm run build
+sudo systemctl reload nginx
 ```
 
 ---
 
-## 🔬 2. Penjelasan Rinci Tahapan Eksekusi
+## 🔬 2. Penjelasan Tahapan Eksekusi
 
-Perintah satu baris di atas menjalankan 7 langkah terstruktur:
+Prosedur pembaruan di atas menjalankan tahapan terstruktur:
 
 | Langkah | Perintah | Fungsi & Penjelasan |
 | :---: | :--- | :--- |
-| **1** | `cd /var/www/jejak-api-demo` | Masuk ke direktori kerja utama project. |
-| **2** | `git checkout -- frontend/package-lock.json && git pull origin main` | Mengembalikan file lock lokal jika ada perubahan otomatis, lalu menarik commit terbaru dari branch `main` GitHub. |
-| **3** | `grep -q "NASA_FIRMS_MAP_KEY" .env ...` | Memeriksa ketersediaan API key NASA FIRMS pada file `.env`. Jika belum ada, otomatis menambahkan key valid. |
-| **4** | `docker compose up -d --build backend ...` | Memperbarui dan me-restart container backend FastAPI + DuckDB secara terisolasi tanpa menyentuh service lain di server. |
-| **5** | `cd frontend && npm install && npm run build` | Mengompilasi kode React + Vite ke aset statis optimal di `dist/` (menggunakan relative API proxy `/api/`). |
-| **6** | `mkdir -p dist/tiles && cp -f public/tiles/*.pmtiles dist/tiles/` | Menyalin ubin vektor 55.532 sel PMTiles ke folder `dist/tiles/` agar dapat disajikan langsung oleh Nginx dengan HTTP Byte-Range. |
-| **7** | `curl -sf http://localhost:8000/...` | Melakukan verifikasi *health-check* mandiri: memastikan FastAPI berjalan dan endpoint titik api satelit NASA FIRMS mengembalikan data secara valid. |
+| **1** | `git pull origin main` | Menarik commit dan pembaruan kode terbaru dari branch `main` GitHub. |
+| **2** | `docker compose up -d --build backend` | Membangun ulang dan me-restart container backend FastAPI + DuckDB di latar belakang. |
+| **3** | `cd frontend && npm install && npm run build` | Mengompilasi kode React + Vite ke aset statis optimal di `dist/` serta menyalin ubin vektor PMTiles. |
+| **4** | `sudo systemctl reload nginx` | Memuat ulang konfigurasi web server Nginx tanpa downtime. |
+| **5** | `curl -sf http://localhost:8000/api/health` | Melakukan verifikasi *health-check* mandiri: memastikan FastAPI berjalan normal. |
 
 ---
 
@@ -43,7 +40,7 @@ server {
     listen 80;
     server_name jejak-api.yourdomain.com; # Ganti dengan domain atau IP VPS Anda
 
-    root /var/www/jejak-api-demo/frontend/dist;
+    root /var/www/jejak-api/frontend/dist;
     index index.html;
 
     # Gzip Compression untuk transfer JSON & script cepat
@@ -92,12 +89,12 @@ sudo nginx -t && sudo systemctl reload nginx
 
 ## 🛡️ 4. Variabel Lingkungan (`.env`)
 
-File `.env` di root `/var/www/jejak-api-demo/.env` berisi:
+File `.env` di root `/var/www/jejak-api/.env` berisi:
 
 ```env
 ENVIRONMENT=production
 FASTAPI_PORT=8000
-DATA_PARQUET_PATH=/var/www/jejak-api-demo/backend/data/oki_risk_latest.parquet
+DATA_PARQUET_PATH=/var/www/jejak-api/backend/data/oki_risk_latest.parquet
 
 # NASA FIRMS Near-Real-Time Active Fire VIIRS 375m
 NASA_FIRMS_MAP_KEY=your_nasa_firms_map_key_here
@@ -123,17 +120,17 @@ curl -s "http://localhost:8000/api/live/hotspots?only_epicenters=true" | jq '.me
 
 ### B. Memeriksa Log Container Backend
 ```bash
-cd /var/www/jejak-api-demo
+cd /var/www/jejak-api
 docker compose logs -f --tail=50 backend
 ```
 
 ### C. Ubin Peta PMTiles Tidak Muncul (Status 404 pada Console)
 Pastikan file `oki_risk_latest.pmtiles` telah disalin ke `frontend/dist/tiles/`:
 ```bash
-ls -lh /var/www/jejak-api-demo/frontend/dist/tiles/
+ls -lh /var/www/jejak-api/frontend/dist/tiles/
 # Jika kosong, salin manual:
-cp -f /var/www/jejak-api-demo/frontend/public/tiles/oki_risk_latest.pmtiles /var/www/jejak-api-demo/frontend/dist/tiles/
-chmod 644 /var/www/jejak-api-demo/frontend/dist/tiles/oki_risk_latest.pmtiles
+cp -f /var/www/jejak-api/frontend/public/tiles/oki_risk_latest.pmtiles /var/www/jejak-api/frontend/dist/tiles/
+chmod 644 /var/www/jejak-api/frontend/dist/tiles/oki_risk_latest.pmtiles
 ```
 
 ### D. Hard Refresh di Browser Klien

@@ -204,16 +204,23 @@ npm run build --prefix frontend
 
 ---
 
-## 🚀 Panduan Deployment & Pembaruan VPS
+## 🚀 Panduan Deployment
 
-Untuk panduan lengkap arsitektur deployment, konfigurasi Nginx reverse proxy, dan pemecahan masalah di server produksi, lihat dokumen lengkap di **[docs/DEPLOYMENT_GUIDE.md](docs/DEPLOYMENT_GUIDE.md)**.
-
-### Perintah Pembaruan Cepat di VPS (One-Line Command)
-Perintah ini **terisolasi khusus untuk direktori `/var/www/jejak-api-demo`** sehingga aman dan tidak mengganggu project lain di PM2/Nginx:
+Aplikasi **JEJAK API** dapat dijalankan dan dideploy dengan mudah menggunakan Docker Compose untuk lingkungan produksi:
 
 ```bash
-cd /var/www/jejak-api-demo && git checkout -- frontend/package-lock.json 2>/dev/null && git pull origin main && (docker compose up -d --build backend 2>/dev/null || docker compose restart backend 2>/dev/null || sudo systemctl restart jejak-api 2>/dev/null || true) && (cd frontend && npm install && npm run build && mkdir -p dist/tiles && cp -f public/tiles/oki_risk_latest.pmtiles dist/tiles/ && chmod -R 755 dist && chmod 644 dist/tiles/oki_risk_latest.pmtiles) && (sudo systemctl reload nginx 2>/dev/null || sudo nginx -s reload 2>/dev/null || true) && (sleep 2 && curl -sf http://localhost:8000/api/health >/dev/null && echo "✅ Backend Sehat!") && echo "🚀 Update Sukses: Sistem Berhasil Diperbarui!"
+# 1. Clone repository
+git clone https://github.com/rivaldigunawanyusuf/JejakApi.git
+cd JejakApi
+
+# 2. Siapkan file konfigurasi lingkungan
+cp .env.example .env
+
+# 3. Jalankan service dengan Docker Compose
+docker compose up -d --build
 ```
+
+Untuk panduan lengkap arsitektur server, konfigurasi Nginx reverse proxy, dan penanganan HTTP Byte-Range untuk format PMTiles, silakan merujuk ke **[docs/DEPLOYMENT_GUIDE.md](docs/DEPLOYMENT_GUIDE.md)**.
 
 ---
 
@@ -265,5 +272,6 @@ JejakApi/
 
 * **Pengembang:** Rivaldi Gunawan Yusuf & Tim JEJAK API
 * **Email:** [rivaldigunawanyusuf@gmail.com](mailto:rivaldigunawanyusuf@gmail.com)
-* **Repositori:** [github.com/rivaldigunawanyusuf/JejakApi-Demo](https://github.com/rivaldigunawanyusuf/JejakApi-Demo)
+* **Repositori:** [github.com/rivaldigunawanyusuf/JejakApi](https://github.com/rivaldigunawanyusuf/JejakApi)
 * **Lisensi:** Didistribusikan di bawah lisensi [MIT License](LICENSE).
+
