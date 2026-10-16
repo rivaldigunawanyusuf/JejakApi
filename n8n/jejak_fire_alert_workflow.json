@@ -1,0 +1,154 @@
+{
+  "name": "JEJAK API - Peatland Fire Risk Alert & Telegram Dispatch",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 0 * * *"
+            }
+          ]
+        }
+      },
+      "id": "1",
+      "name": "Daily Morning Cron (07:00 WIB)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "trigger-risk-alert",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "2",
+      "name": "On-Demand Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 500],
+      "webhookId": "jejak-alert-webhook"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.JEJAK_API_URL || 'http://localhost:8000' }}/api/alerts/webhook/simulate",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "target_area_name",
+              "value": "={{ $json.body?.target_area_name || 'Kabupaten Ogan Komering Ilir' }}"
+            },
+            {
+              "name": "khg_id",
+              "value": "={{ $json.body?.khg_id || '' }}"
+            },
+            {
+              "name": "risk_threshold",
+              "value": "={{ $json.body?.risk_threshold || 0.60 }}"
+            }
+          ]
+        },
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "3",
+      "name": "Fetch Risk Alert Digest",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [500, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.alert_level }}",
+              "operation": "notEqual",
+              "value2": "AMAN"
+            }
+          ]
+        }
+      },
+      "id": "4",
+      "name": "Is Risk Elevated?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [740, 400]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $env.TELEGRAM_CHAT_ID }}",
+        "text": "={{ $json.telegram_digest }}",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "5",
+      "name": "Dispatch Telegram Alert",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.1,
+      "position": [980, 360],
+      "credentials": {
+        "telegramApi": {
+          "id": "jejak_telegram_bot",
+          "name": "JEJAK Telegram Bot"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Daily Morning Cron (07:00 WIB)": {
+      "main": [
+        [
+          {
+            "node": "Fetch Risk Alert Digest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On-Demand Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Fetch Risk Alert Digest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Risk Alert Digest": {
+      "main": [
+        [
+          {
+            "node": "Is Risk Elevated?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Risk Elevated?": {
+      "main": [
+        [
+          {
+            "node": "Dispatch Telegram Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
