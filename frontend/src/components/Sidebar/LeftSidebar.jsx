@@ -1697,7 +1697,7 @@ const LeftSidebar = ({
                           className="text-[10px] text-[#38bdf8] hover:underline flex items-center gap-1"
                         >
                           <Grid className="w-3 h-3" />
-                          <span>Tampilkan Grid Quilt</span>
+                          <span>Mode Grid</span>
                         </button>
                       </div>
                       <select
@@ -1802,61 +1802,61 @@ const LeftSidebar = ({
 
                     {/* Screen 1: Autonomous Drone Docking Station Screen (When Standby & Charging) */}
                     {selectedMission?.stream_mode === 'STANDBY_CHARGING' && !isDockDispatched ? (
-                      <div className="w-full aspect-video rounded-lg border border-amber-500/40 relative overflow-hidden bg-gradient-to-b from-[#080d16] via-[#0d1424] to-[#060911] shadow-2xl p-3 flex flex-col justify-between select-none font-mono text-white">
+                      <div className="w-full min-h-[240px] rounded-lg border border-amber-500/40 relative overflow-hidden bg-gradient-to-b from-[#080d16] via-[#0d1424] to-[#060911] shadow-2xl p-3 flex flex-col justify-between select-none font-mono text-white">
                         {/* Dot Matrix & Subtle Glow */}
                         <div className="absolute inset-0 bg-[radial-gradient(#334155_1px,transparent_1px)] [background-size:12px_12px] opacity-30 pointer-events-none" />
                         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(245,158,11,0.12),transparent_70%)] pointer-events-none" />
 
                         {/* Telemetry Header */}
-                        <div className="relative z-10 flex items-center justify-between border-b border-white/10 pb-1.5">
-                          <div className="flex items-center gap-2 min-w-0">
+                        <div className="relative z-10 flex items-center justify-between border-b border-white/10 pb-1.5 gap-2">
+                          <div className="flex items-center gap-2 min-w-0 flex-1">
                             <div className="w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/40 flex items-center justify-center shrink-0">
                               <Zap className="w-3.5 h-3.5 fill-amber-400" />
                             </div>
-                            <div className="min-w-0">
-                              <div className="text-[10px] font-bold text-white tracking-wide truncate flex items-center gap-1.5">
-                                <span>STASIUN DOCKING AUTONOMOUS</span>
-                                <span className="px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[7px]">PAD-04</span>
+                            <div className="min-w-0 flex-1">
+                              <div className="text-[10px] font-bold text-white tracking-wide flex items-center gap-1.5">
+                                <span className="truncate">STASIUN DOCKING DRONE</span>
+                                <span className="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[7.5px] font-bold shrink-0 whitespace-nowrap">PAD-04</span>
                               </div>
-                              <div className="text-[7.5px] text-[#94a3b8] truncate">
+                              <div className="text-[8px] text-[#94a3b8] truncate">
                                 {selectedMission?.area_name || 'Kecamatan Air Sugihan, OKI'} • Solar Hybrid Station
                               </div>
                             </div>
                           </div>
-                          <div className="flex items-center gap-1.5 text-[8px] shrink-0">
-                            <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold">
-                              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-                              FAST-CHARGING
+                          <div className="flex items-center gap-1.5 text-[8px] shrink-0 ml-1">
+                            <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold whitespace-nowrap">
+                              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse shrink-0" />
+                              <span>FAST-CHARGING</span>
                             </span>
                           </div>
                         </div>
 
                         {/* Center Charging Pad Graphic & Battery Progression */}
-                        <div className="relative z-10 my-auto flex items-center justify-around gap-2 px-1 py-1">
+                        <div className="relative z-10 my-1 flex items-center justify-between gap-2 px-1">
                           {/* Left: Animated Docking Nest Graphic */}
-                          <div className="relative flex flex-col items-center justify-center">
-                            <div className="relative w-20 h-20 rounded-full border-2 border-dashed border-amber-400/50 flex items-center justify-center bg-black/40 shadow-[0_0_20px_rgba(245,158,11,0.15)]">
+                          <div className="relative flex flex-col items-center justify-center shrink-0">
+                            <div className="relative w-16 h-16 rounded-full border-2 border-dashed border-amber-400/50 flex items-center justify-center bg-black/40 shadow-[0_0_20px_rgba(245,158,11,0.15)]">
                               <div className="absolute inset-1 rounded-full border border-amber-400/30 animate-spin-slow" />
                               <div className="absolute w-full h-px bg-amber-500/40" />
                               <div className="absolute h-full w-px bg-amber-500/40" />
                               
                               <div className="relative z-10 flex flex-col items-center justify-center">
-                                <div className="w-8 h-8 rounded-lg bg-amber-500/15 border border-amber-400/60 flex items-center justify-center text-amber-300 font-bold text-[9px] shadow">
-                                  <span className="text-[14px]">🛸</span>
+                                <div className="w-7 h-7 rounded-lg bg-amber-500/15 border border-amber-400/60 flex items-center justify-center text-amber-300 font-bold text-[9px] shadow">
+                                  <span className="text-[13px]">🛸</span>
                                 </div>
-                                <span className="mt-0.5 text-[7px] font-bold text-amber-300 bg-black/80 px-1 rounded border border-amber-400/30">
+                                <span className="mt-0.5 text-[7px] font-bold text-amber-300 bg-black/80 px-1 rounded border border-amber-400/30 whitespace-nowrap">
                                   DOCK-LOCKED
                                 </span>
                               </div>
                             </div>
-                            <div className="mt-1 text-[7.5px] text-slate-300 font-semibold flex items-center gap-1">
+                            <div className="mt-1 text-[7.5px] text-slate-300 font-semibold flex items-center gap-1 whitespace-nowrap">
                               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                              Clamp: IP55 Sealed
+                              <span>Clamp: IP55 Sealed</span>
                             </div>
                           </div>
 
                           {/* Right: Power & Charging Telemetry Details */}
-                          <div className="flex-1 max-w-[270px] bg-[#121824]/90 border border-amber-500/30 rounded-lg p-2.5 shadow-md flex flex-col justify-between">
+                          <div className="flex-1 bg-[#121824]/90 border border-amber-500/30 rounded-lg p-2 shadow-md flex flex-col justify-between">
                             <div className="flex items-center justify-between mb-1">
                               <span className="text-[8.5px] font-bold text-amber-300 flex items-center gap-1">
                                 <Zap className="w-3 h-3 text-amber-400 fill-amber-400 animate-bounce" />
@@ -1865,7 +1865,7 @@ const LeftSidebar = ({
                               <span className="text-sm font-bold text-amber-400 font-mono">94%</span>
                             </div>
 
-                            <div className="w-full bg-black/70 rounded-full h-2.5 overflow-hidden border border-white/10 p-0.5 my-1">
+                            <div className="w-full bg-black/70 rounded-full h-2 overflow-hidden border border-white/10 p-0.5 my-0.5">
                               <div
                                 className="bg-gradient-to-r from-amber-500 via-yellow-400 to-emerald-400 h-full rounded-full transition-all duration-500 relative flex items-center justify-end pr-1"
                                 style={{ width: '94%' }}
@@ -1874,96 +1874,98 @@ const LeftSidebar = ({
                               </div>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-1 text-[7.5px] text-[#94a3b8] mt-1 border-t border-white/10 pt-1">
+                            <div className="grid grid-cols-2 gap-x-2 gap-y-0.5 text-[7.5px] text-[#94a3b8] mt-1 border-t border-white/10 pt-1">
                               <div>Inverter: <strong className="text-white">48.8V / 12.4A</strong></div>
                               <div>Suhu Sel: <strong className="text-emerald-400">29.4°C</strong></div>
                               <div>Estimasi Full: <strong className="text-amber-300">~4 Menit</strong></div>
-                              <div>RTK Alignment: <strong className="text-cyan-300">±1.2cm Fix</strong></div>
+                              <div>RTK Fix: <strong className="text-cyan-300">±1.2cm</strong></div>
                             </div>
                           </div>
                         </div>
 
                         {/* Footer with Big Dispatch Button */}
-                        <div className="relative z-10 flex items-center justify-between border-t border-white/10 pt-1.5">
-                          <div className="flex items-center gap-1 text-[8px] text-[#94a3b8]">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                            <span>Unit terparkir di hangar. Siap re-dispatch otomatis.</span>
+                        <div className="relative z-10 flex items-center justify-between border-t border-white/10 pt-2 mt-auto shrink-0 gap-2">
+                          <div className="flex items-center gap-1 text-[8px] text-[#94a3b8] min-w-0 flex-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" />
+                            <span className="truncate">Unit terparkir di hangar. Siap re-dispatch otomatis.</span>
                           </div>
                           <button
                             onClick={() => setIsDockDispatched(true)}
-                            className="flex items-center gap-1 px-3 py-1 rounded bg-amber-500 hover:bg-amber-400 text-black font-bold text-[8.5px] shadow transition-all hover:scale-105 cursor-pointer"
+                            className="flex items-center gap-1 px-3 py-1.5 rounded bg-amber-500 hover:bg-amber-400 text-black font-bold text-[8.5px] shadow transition-all hover:scale-105 cursor-pointer shrink-0 whitespace-nowrap"
                             title="Buka kubah docking dan luncurkan drone untuk patroli udara aktif"
                           >
-                            <Rocket className="w-3 h-3" />
-                            <span>Buka Hangar &amp; Luncurkan Drone</span>
+                            <Rocket className="w-3 h-3 shrink-0" />
+                            <span>Luncurkan Drone</span>
                           </button>
                         </div>
                       </div>
                     ) : selectedMission?.stream_mode === 'AREA_AMAN' && !isAreaAmanInspecting ? (
                       /* Screen 2: Peatland Eco-Monitoring & Area Aman (Green Zone) Screen */
-                      <div className="w-full aspect-video rounded-lg border border-sky-500/40 relative overflow-hidden bg-gradient-to-b from-[#05140e] via-[#082017] to-[#040e0a] shadow-2xl p-3 flex flex-col justify-between select-none font-mono text-white">
+                      <div className="w-full min-h-[240px] rounded-lg border border-sky-500/40 relative overflow-hidden bg-gradient-to-b from-[#05140e] via-[#082017] to-[#040e0a] shadow-2xl p-3 flex flex-col justify-between select-none font-mono text-white">
                         {/* Dot Matrix & Subtle Emerald Glow */}
                         <div className="absolute inset-0 bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:12px_12px] opacity-25 pointer-events-none" />
                         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(16,185,129,0.15),transparent_70%)] pointer-events-none" />
 
                         {/* Header */}
-                        <div className="relative z-10 flex items-center justify-between border-b border-white/10 pb-1.5">
-                          <div className="flex items-center gap-2 min-w-0">
+                        <div className="relative z-10 flex items-center justify-between border-b border-white/10 pb-1.5 gap-2">
+                          <div className="flex items-center gap-2 min-w-0 flex-1">
                             <div className="w-6 h-6 rounded-full bg-sky-500/20 text-sky-400 border border-sky-500/40 flex items-center justify-center shrink-0">
                               <ShieldCheck className="w-3.5 h-3.5" />
                             </div>
-                            <div className="min-w-0">
-                              <div className="text-[10.5px] font-bold text-white tracking-wide truncate flex items-center gap-1.5">
-                                <span>OBSERVASI BIO-HIDROLOGIS GAMBUT</span>
-                                <span className="px-1.5 py-0.2 rounded bg-sky-500/20 text-sky-300 border border-sky-500/30 text-[7px]">SIAGA HIJAU</span>
+                            <div className="min-w-0 flex-1">
+                              <div className="text-[10px] font-bold text-white tracking-wide flex items-center gap-1.5">
+                                <span className="truncate">PANTAUAN LAHAN GAMBUT</span>
+                                <span className="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[7.5px] font-bold shrink-0 whitespace-nowrap">
+                                  AMAN
+                                </span>
                               </div>
                               <div className="text-[8px] text-[#94a3b8] truncate">
-                                {selectedMission?.area_name || 'Kecamatan Pulang Pisau, Kalteng'} • Zona Konservasi Gambut
+                                {selectedMission?.area_name || 'Kecamatan Pulang Pisau, Kalteng'} • Zona Konservasi
                               </div>
                             </div>
                           </div>
-                          <div className="flex items-center gap-1.5 text-[8px] shrink-0">
-                            <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40 font-bold">
-                              <ShieldCheck className="w-3 h-3 text-sky-400" />
-                              NIHIL HOTSPOT
+                          <div className="flex items-center gap-1.5 text-[8px] shrink-0 ml-1">
+                            <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40 font-bold whitespace-nowrap">
+                              <ShieldCheck className="w-3 h-3 text-sky-400 shrink-0" />
+                              <span>NIHIL HOTSPOT</span>
                             </span>
                           </div>
                         </div>
 
                         {/* Center Status & Hydrological Parameters */}
-                        <div className="relative z-10 my-auto flex items-center justify-around gap-2 px-1 py-1">
+                        <div className="relative z-10 my-1 flex items-center justify-between gap-2 px-1">
                           {/* Left: Eco Protective Shield Graphic */}
-                          <div className="relative flex flex-col items-center justify-center">
-                            <div className="relative w-20 h-20 rounded-full border-2 border-dashed border-emerald-400/50 flex items-center justify-center bg-black/40 shadow-[0_0_20px_rgba(16,185,129,0.15)]">
+                          <div className="relative flex flex-col items-center justify-center shrink-0">
+                            <div className="relative w-16 h-16 rounded-full border-2 border-dashed border-emerald-400/50 flex items-center justify-center bg-black/40 shadow-[0_0_20px_rgba(16,185,129,0.15)]">
                               <div className="absolute inset-1 rounded-full border border-emerald-400/30 animate-spin-slow" />
                               <div className="relative z-10 flex flex-col items-center justify-center">
-                                <ShieldCheck className="w-7 h-7 text-emerald-400" />
-                                <span className="mt-0.5 text-[7px] font-bold text-emerald-300 bg-black/80 px-1.5 py-0.2 rounded border border-emerald-400/30">
+                                <ShieldCheck className="w-6 h-6 text-emerald-400" />
+                                <span className="mt-0.5 text-[7px] font-bold text-emerald-300 bg-black/80 px-1.5 py-0.2 rounded border border-emerald-400/30 whitespace-nowrap">
                                   ZONA AMAN
                                 </span>
                               </div>
                             </div>
-                            <div className="mt-1 text-[7.5px] text-slate-300 font-semibold flex items-center gap-1">
+                            <div className="mt-1 text-[7.5px] text-slate-300 font-semibold flex items-center gap-1 whitespace-nowrap">
                               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                              Kondisi: Basah &amp; Terlindungi
+                              <span>Basah &amp; Terlindungi</span>
                             </div>
                           </div>
 
                           {/* Right: Environmental Parameter Grid */}
-                          <div className="flex-1 max-w-[270px] bg-[#0c1f17]/90 border border-emerald-500/30 rounded-lg p-2.5 shadow-md flex flex-col justify-between">
+                          <div className="flex-1 bg-[#0c1f17]/90 border border-emerald-500/30 rounded-lg p-2 shadow-md flex flex-col justify-between">
                             <div className="flex items-center justify-between mb-1">
                               <span className="text-[8.5px] font-bold text-emerald-300 flex items-center gap-1">
                                 <ShieldCheck className="w-3 h-3 text-emerald-400" />
-                                STATUS HIDROLOGIS GAMBUT
+                                KONDISI GAMBUT
                               </span>
                               <span className="text-xs font-bold text-emerald-400 font-mono">TMA +18 cm</span>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-1 text-[7.5px] text-[#94a3b8] mt-1 border-t border-white/10 pt-1">
+                            <div className="grid grid-cols-2 gap-x-2 gap-y-0.5 text-[7.5px] text-[#94a3b8] mt-1 border-t border-white/10 pt-1">
                               <div>TMA Gambut: <strong className="text-sky-300">+18 cm (Basah)</strong></div>
                               <div>Risiko Api: <strong className="text-emerald-400">28.5% (Rendah)</strong></div>
                               <div>Suhu Gambut: <strong className="text-white">30.5°C</strong></div>
-                              <div>Hotspot: <strong className="text-emerald-400">0 Titik (Nihil)</strong></div>
+                              <div>Hotspot: <strong className="text-emerald-400">0 Titik</strong></div>
                               <div>Kelembapan: <strong className="text-white">84% RH</strong></div>
                               <div>Patroli: <strong className="text-amber-300">14:30 WIB</strong></div>
                             </div>
@@ -1971,18 +1973,18 @@ const LeftSidebar = ({
                         </div>
 
                         {/* Footer with Video Inspection Option */}
-                        <div className="relative z-10 flex items-center justify-between border-t border-white/10 pt-1.5">
-                          <div className="flex items-center gap-1 text-[8px] text-[#94a3b8]">
-                            <span className="w-1.5 h-1.5 rounded-full bg-sky-400" />
-                            <span>Monitoring rutin selesai. Unit standby di Pos Pantau Manggala Agni.</span>
+                        <div className="relative z-10 flex items-center justify-between border-t border-white/10 pt-2 mt-auto shrink-0 gap-2">
+                          <div className="flex items-center gap-1 text-[8px] text-[#94a3b8] min-w-0 flex-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-sky-400 shrink-0" />
+                            <span className="truncate">Monitoring rutin selesai. Unit standby di Pos Pantau.</span>
                           </div>
                           <button
                             onClick={() => setIsAreaAmanInspecting(true)}
-                            className="flex items-center gap-1 px-3 py-1 rounded bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/40 font-bold text-[8.5px] shadow transition-all hover:scale-105 cursor-pointer"
+                            className="flex items-center gap-1 px-3 py-1.5 rounded bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/40 font-bold text-[8.5px] shadow transition-all hover:scale-105 cursor-pointer shrink-0 whitespace-nowrap"
                             title="Tinjau rekaman video inspeksi udara lahan gambut"
                           >
-                            <Video className="w-3 h-3" />
-                            <span>Tinjau Rekaman Udara</span>
+                            <Video className="w-3 h-3 shrink-0" />
+                            <span>Tinjau Rekaman</span>
                           </button>
                         </div>
                       </div>
@@ -2143,20 +2145,20 @@ const LeftSidebar = ({
                           {isDockDispatched ? (
                             <button
                               onClick={() => setIsDockDispatched(false)}
-                              className="px-2.5 py-1 rounded bg-black/85 hover:bg-black text-amber-300 hover:text-amber-200 border border-amber-500/50 text-[8px] font-mono font-bold backdrop-blur-md transition-all shadow-md flex items-center gap-1"
+                              className="px-2.5 py-1 rounded bg-black/85 hover:bg-black text-amber-300 hover:text-amber-200 border border-amber-500/50 text-[8px] font-mono font-bold backdrop-blur-md transition-all shadow-md flex items-center gap-1 cursor-pointer whitespace-nowrap"
                               title="Kembalikan Drone ke Stasiun Docking & Fast-Charge"
                             >
-                              <RotateCcw className="w-3 h-3" />
-                              <span>Recall ke Dock Pad</span>
+                              <RotateCcw className="w-3 h-3 shrink-0" />
+                              <span>Kembali ke Dock</span>
                             </button>
                           ) : isAreaAmanInspecting ? (
                             <button
                               onClick={() => setIsAreaAmanInspecting(false)}
-                              className="px-2.5 py-1 rounded bg-black/85 hover:bg-black text-sky-300 hover:text-sky-200 border border-sky-500/50 text-[8px] font-mono font-bold backdrop-blur-md transition-all shadow-md flex items-center gap-1"
+                              className="px-2.5 py-1 rounded bg-black/85 hover:bg-black text-sky-300 hover:text-sky-200 border border-sky-500/50 text-[8px] font-mono font-bold backdrop-blur-md transition-all shadow-md flex items-center gap-1 cursor-pointer whitespace-nowrap"
                               title="Tutup Rekaman Udara & Kembali ke Status Aman"
                             >
-                              <ShieldCheck className="w-3 h-3" />
-                              <span>Kembali ke Status Aman</span>
+                              <ShieldCheck className="w-3 h-3 shrink-0" />
+                              <span>Tutup Rekaman</span>
                             </button>
                           ) : null}
 
@@ -2275,18 +2277,18 @@ const LeftSidebar = ({
                           {!isDockDispatched ? (
                             <button
                               onClick={() => setIsDockDispatched(true)}
-                              className="px-2.5 py-1 rounded bg-amber-500 hover:bg-amber-400 text-black font-bold text-[9.5px] font-mono flex items-center gap-1 shadow-md transition-all hover:scale-105"
+                              className="px-2.5 py-1 rounded bg-amber-500 hover:bg-amber-400 text-black font-bold text-[9.5px] font-mono flex items-center gap-1 shadow-md transition-all hover:scale-105 whitespace-nowrap cursor-pointer"
                             >
-                              <Rocket className="w-3.5 h-3.5" />
-                              <span>Dispatch Patrol</span>
+                              <Rocket className="w-3.5 h-3.5 shrink-0" />
+                              <span>Luncurkan Drone</span>
                             </button>
                           ) : (
                             <button
                               onClick={() => setIsDockDispatched(false)}
-                              className="px-2.5 py-1 rounded bg-[#202124] hover:bg-[#282c34] text-amber-400 hover:text-amber-300 border border-amber-500/40 font-bold text-[9.5px] font-mono flex items-center gap-1.5 shadow-md transition-all"
+                              className="px-2.5 py-1 rounded bg-[#202124] hover:bg-[#282c34] text-amber-400 hover:text-amber-300 border border-amber-500/40 font-bold text-[9.5px] font-mono flex items-center gap-1.5 shadow-md transition-all whitespace-nowrap cursor-pointer"
                             >
-                              <RotateCcw className="w-3.5 h-3.5" />
-                              <span>Recall ke Dock Pad</span>
+                              <RotateCcw className="w-3.5 h-3.5 shrink-0" />
+                              <span>Kembali ke Dock</span>
                             </button>
                           )}
                         </div>
@@ -2300,11 +2302,11 @@ const LeftSidebar = ({
                           ? 'bg-gradient-to-r from-sky-500/15 via-[#181818] to-sky-500/10 border-sky-500/40'
                           : 'bg-gradient-to-r from-sky-500/10 via-[#181818] to-sky-500/10 border-sky-500/30'
                       }`}>
-                        <div className="flex items-center gap-2 min-w-0">
+                        <div className="flex items-center gap-2 min-w-0 flex-1">
                           <div className="w-6 h-6 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/30 flex items-center justify-center font-bold text-xs shrink-0">
                             {isAreaAmanInspecting ? <Video className="w-3.5 h-3.5 text-sky-400" /> : <ShieldCheck className="w-3.5 h-3.5" />}
                           </div>
-                          <div className="min-w-0">
+                          <div className="min-w-0 flex-1">
                             <div className="text-[10px] font-bold text-[#f8fafc] font-mono truncate">
                               {isAreaAmanInspecting ? 'REKAMAN INSPEKSI UDARA AKTIF' : 'WILAYAH AMAN // POS PANTAU STANDBY'}
                             </div>
@@ -2320,18 +2322,18 @@ const LeftSidebar = ({
                           {!isAreaAmanInspecting ? (
                             <button
                               onClick={() => setIsAreaAmanInspecting(true)}
-                              className="px-2.5 py-1 rounded bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/40 font-bold text-[9.5px] font-mono flex items-center gap-1 shadow-md transition-all hover:scale-105"
+                              className="px-2.5 py-1 rounded bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/40 font-bold text-[9.5px] font-mono flex items-center gap-1 shadow-md transition-all hover:scale-105 whitespace-nowrap cursor-pointer"
                             >
-                              <Video className="w-3.5 h-3.5" />
+                              <Video className="w-3.5 h-3.5 shrink-0" />
                               <span>Tinjau Rekaman</span>
                             </button>
                           ) : (
                             <button
                               onClick={() => setIsAreaAmanInspecting(false)}
-                              className="px-2.5 py-1 rounded bg-[#202124] hover:bg-[#282c34] text-sky-300 hover:text-white border border-sky-500/40 font-bold text-[9.5px] font-mono flex items-center gap-1.5 shadow-md transition-all"
+                              className="px-2.5 py-1 rounded bg-[#202124] hover:bg-[#282c34] text-sky-300 hover:text-white border border-sky-500/40 font-bold text-[9.5px] font-mono flex items-center gap-1.5 shadow-md transition-all whitespace-nowrap cursor-pointer"
                             >
-                              <ShieldCheck className="w-3.5 h-3.5" />
-                              <span>Kembali ke Status Aman</span>
+                              <ShieldCheck className="w-3.5 h-3.5 shrink-0" />
+                              <span>Tutup Rekaman</span>
                             </button>
                           )}
                         </div>
